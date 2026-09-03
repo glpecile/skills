@@ -1,0 +1,8 @@
+# owner/repo  skill-name   — installed by setup.sh via `bunx skills add <repo> --skill <name> -g`
+emilkowalski/skill  animation-vocabulary
+emilkowalski/skill  apple-design
+emilkowalski/skill  emil-design-eng
+emilkowalski/skill  find-animation-opportunities
+emilkowalski/skill  improve-animations
+emilkowalski/skill  review-animations
+cursor/plugins      unslop
