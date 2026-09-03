@@ -1,6 +1,6 @@
 # Skills
 
-Personal collection of [Claude Code skills](https://code.claude.com/docs/en/skills), plus a one-shot setup for a new machine.
+Personal collection of [agent skills](https://agentskills.io) for Claude Code, Cursor, Codex, and OpenCode, plus a one-shot setup for a new machine.
 
 ## Setup
 
@@ -11,15 +11,15 @@ git clone git@github.com:glpecile/skills.git ~/Developer/skills
 
 `setup.sh` is idempotent:
 
-1. Symlinks every `skills/*` into `~/.claude/skills/` (edits in this repo are live immediately).
+1. Symlinks every `skills/*` into `~/.agents/skills/`, `~/.claude/skills/`, and the skills dir of each installed agent (Cursor, Codex, OpenCode). Edits in this repo are live everywhere at once.
 2. Prunes symlinks into this repo that no longer resolve.
-3. Installs each line of `manifest` from its upstream repo via `bunx skills add`.
+3. Installs each line of `manifest` from its upstream repo via `bunx skills add -a '*'` (all detected agents).
 
 Private repo — requires git access (SSH) to clone. `bunx` (Bun) is needed for the manifest step only.
 
 ## Layout
 
-- `skills/` — own skills and vendored third-party skills that have no installable upstream. Symlinked.
+- `skills/` — own skills and vendored third-party skills that have no installable upstream. Symlinked. `agents/openai.yaml` inside a skill is Codex display metadata.
 - `manifest` — `owner/repo skill-name` per line for skills that live in a public repo. Installed as copies, updated with `bunx skills update -g`.
 
 ## Own
