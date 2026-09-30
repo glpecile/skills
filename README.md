@@ -25,6 +25,7 @@ Private repo — requires git access (SSH) to clone. `bunx` (Bun) is needed for 
 ## Own
 
 - **[delegate](./skills/delegate/SKILL.md)** — Plan at session level, delegate implementation to cheaper model subagents, verify each task with a runnable acceptance check.
+- **[ponytail-merge](./skills/ponytail-merge/SKILL.md)** — Delegate `ponytail-review`, fix findings, validate, commit and push, and merge an existing PR. Requires `ponytail-review` installed separately, subagents, Git, and `gh` for PR operations.
 
 ## Vendored
 

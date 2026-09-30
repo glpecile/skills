@@ -1,0 +1,3 @@
+interface:
+  display_name: "Ponytail Merge"
+  short_description: "Delegate a ponytail review, fix findings, and ship changes"
