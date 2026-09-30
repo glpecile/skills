@@ -1,6 +1,7 @@
 ---
 name: surfaces
-description: Shadows, borders, gradients, depth, and dark-mode surface treatment for interfaces. Use when styling cards, buttons, containers, modals, dropdowns, or images, choosing between borders and shadows, fixing nested border radii, adding gradients or fades, defining elevation, or adapting surfaces to dark mode. Triggers on: box-shadow, shadow, border, borders, border-radius, rounded corners, nested radius, concentric radius, elevation, depth, layering, surface, card, container, gradient, gradient banding, eased gradient, mask-image, fade, fade-out, hairline border, 0.5px border, divider, outline, image outline, image border, dark mode, dark theme, theme variables, color scale, oklch, "looks flat", "border looks harsh", "card feels off".
+description: >-
+  Shadows, borders, gradients, depth, and dark-mode surface treatment for interfaces. Use when styling cards, buttons, containers, modals, dropdowns, or images, choosing between borders and shadows, fixing nested border radii, adding gradients or fades, defining elevation, or adapting surfaces to dark mode. Triggers on: box-shadow, shadow, border, borders, border-radius, rounded corners, nested radius, concentric radius, elevation, depth, layering, surface, card, container, gradient, gradient banding, eased gradient, mask-image, fade, fade-out, hairline border, 0.5px border, divider, outline, image outline, image border, dark mode, dark theme, theme variables, color scale, oklch, "looks flat", "border looks harsh", "card feels off".
 ---
 
 # Surfaces

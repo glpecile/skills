@@ -1,6 +1,7 @@
 ---
 name: color
-description: Working with color in CSS through OKLCH. Use when a task involves picking, converting, or auditing colors — hex/rgb/hsl to oklch migration, building tonal scales and multi-hue palettes, deriving dark mode, diagnosing or repairing text contrast (APCA and WCAG), staying inside sRGB or Display P3 gamut, or defining Tailwind v4 theme tokens. Triggers on: oklch, oklab, color space, convert hex, rgb, hsl, palette, color scale, tonal ramp, shades, contrast checking, WCAG, APCA, a11y colors, readability, gamut, wide gamut, display-p3, srgb, chroma, hue, lightness, saturation, dark mode palette, theme colors, design tokens, @theme, Tailwind colors, color variables.
+description: >-
+  Working with color in CSS through OKLCH. Use when a task involves picking, converting, or auditing colors — hex/rgb/hsl to oklch migration, building tonal scales and multi-hue palettes, deriving dark mode, diagnosing or repairing text contrast (APCA and WCAG), staying inside sRGB or Display P3 gamut, or defining Tailwind v4 theme tokens. Triggers on: oklch, oklab, color space, convert hex, rgb, hsl, palette, color scale, tonal ramp, shades, contrast checking, WCAG, APCA, a11y colors, readability, gamut, wide gamut, display-p3, srgb, chroma, hue, lightness, saturation, dark mode palette, theme colors, design tokens, @theme, Tailwind colors, color variables.
 ---
 
 # Color

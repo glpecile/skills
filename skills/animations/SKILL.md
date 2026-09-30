@@ -1,6 +1,7 @@
 ---
 name: animations
-description: Animation for product interfaces — when to animate (and when not to), easing, duration, springs, enter/exit transitions, and performance. Use when adding or reviewing motion in UI components (modals, popovers, drawers, toasts, dropdowns, tooltips, buttons), choosing an easing curve or duration, fixing animations that feel slow, janky, or wrong, or implementing hover/press feedback and reduced-motion support. Triggers on: animation, transition, easing, ease-out, ease-in-out, cubic-bezier, spring, bounce, duration, timing, keyframes, transform, opacity, fade, slide, scale, stagger, hover, press, active state, microinteraction, modal, dialog, drawer, sheet, popover, dropdown, tooltip, toast, Framer Motion, motion/react, AnimatePresence, WAAPI, will-change, GPU, janky, choppy, feels slow, feels off, make it smooth, prefers-reduced-motion.
+description: >-
+  Animation for product interfaces — when to animate (and when not to), easing, duration, springs, enter/exit transitions, and performance. Use when adding or reviewing motion in UI components (modals, popovers, drawers, toasts, dropdowns, tooltips, buttons), choosing an easing curve or duration, fixing animations that feel slow, janky, or wrong, or implementing hover/press feedback and reduced-motion support. Triggers on: animation, transition, easing, ease-out, ease-in-out, cubic-bezier, spring, bounce, duration, timing, keyframes, transform, opacity, fade, slide, scale, stagger, hover, press, active state, microinteraction, modal, dialog, drawer, sheet, popover, dropdown, tooltip, toast, Framer Motion, motion/react, AnimatePresence, WAAPI, will-change, GPU, janky, choppy, feels slow, feels off, make it smooth, prefers-reduced-motion.
 ---
 
 # Interface Animations
