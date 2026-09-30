@@ -1,6 +1,7 @@
 ---
 name: ui-review
-description: Review interface code the way a design engineer would — catch the spacing, motion, accessibility, and polish mistakes AI leaves behind. Use when reviewing a UI diff, a generated component, or a pull request that touches the interface, when someone asks "does this look right / feel right", or after an agent builds UI and you want it held to a craft bar before it ships. Triggers on: review, code review, UI review, design review, PR review, critique, "does this look right", "is this good", "feels off", "catch mistakes", AI-generated UI, generated component, polish pass, quality bar, ship it, sign off, nitpick, design QA.
+description: >-
+  Review interface code the way a design engineer would — catch the spacing, motion, accessibility, and polish mistakes AI leaves behind. Use when reviewing a UI diff, a generated component, or a pull request that touches the interface, when someone asks "does this look right / feel right", or after an agent builds UI and you want it held to a craft bar before it ships. Triggers on: review, code review, UI review, design review, PR review, critique, "does this look right", "is this good", "feels off", "catch mistakes", AI-generated UI, generated component, polish pass, quality bar, ship it, sign off, nitpick, design QA.
 ---
 
 # UI Review

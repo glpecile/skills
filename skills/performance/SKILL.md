@@ -1,6 +1,7 @@
 ---
 name: performance
-description: Rules for making UI fast — virtualization, transition specificity, GPU compositing, preloading, lazy loading, layout-shift prevention, and keeping animation out of React renders. Use when building or reviewing UI that renders long lists, animates, loads fonts/images/video, switches themes, or feels janky or slow. Triggers on: performance, slow, janky, lag, stutter, fps, frame drops, virtualization, virtual list, infinite scroll, long list, re-render, re-render storm, transition all, will-change, GPU, compositing, layout shift, CLS, layout thrash, reflow, preload, prefetch, lazy loading, loading=lazy, image optimization, video, font loading, FOUT, skeleton, perceived performance, IntersectionObserver, static generation, SSG, theme switch, blur filter, CSS variables, Framer Motion performance.
+description: >-
+  Rules for making UI fast — virtualization, transition specificity, GPU compositing, preloading, lazy loading, layout-shift prevention, and keeping animation out of React renders. Use when building or reviewing UI that renders long lists, animates, loads fonts/images/video, switches themes, or feels janky or slow. Triggers on: performance, slow, janky, lag, stutter, fps, frame drops, virtualization, virtual list, infinite scroll, long list, re-render, re-render storm, transition all, will-change, GPU, compositing, layout shift, CLS, layout thrash, reflow, preload, prefetch, lazy loading, loading=lazy, image optimization, video, font loading, FOUT, skeleton, perceived performance, IntersectionObserver, static generation, SSG, theme switch, blur filter, CSS variables, Framer Motion performance.
 ---
 
 # Interface Performance

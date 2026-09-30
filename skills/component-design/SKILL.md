@@ -1,6 +1,7 @@
 ---
 name: component-design
-description: Design React component APIs that are composable, predictable, and hard to misuse — composition over configuration, compound components, controlled/uncontrolled state, and sensible props. Use when creating or refactoring React components, designing a component library, reviewing a props API, or deciding how a component should expose customization. Triggers on: component API, props design, compound components, composition, configuration props, controlled, uncontrolled, defaultValue, asChild, Slot, render props, forwardRef, ref forwarding, variants, className override, design system components, reusable components, component library, Radix, shadcn, prop drilling, boolean props, slots, children, context.
+description: >-
+  Design React component APIs that are composable, predictable, and hard to misuse — composition over configuration, compound components, controlled/uncontrolled state, and sensible props. Use when creating or refactoring React components, designing a component library, reviewing a props API, or deciding how a component should expose customization. Triggers on: component API, props design, compound components, composition, configuration props, controlled, uncontrolled, defaultValue, asChild, Slot, render props, forwardRef, ref forwarding, variants, className override, design system components, reusable components, component library, Radix, shadcn, prop drilling, boolean props, slots, children, context.
 ---
 
 # Component Design
