@@ -36,3 +36,5 @@ Private repo — requires git access (SSH) to clone. `bunx` (Bun) is needed for 
 
 - [emilkowalski/skill](https://github.com/emilkowalski/skill) — animation-vocabulary, apple-design, emil-design-eng, find-animation-opportunities, improve-animations, review-animations
 - [cursor/plugins](https://github.com/cursor/plugins) — unslop
+- [vojtaholik/good-css](https://github.com/vojtaholik/good-css) — good-css
+- [jakubkrehel/skills](https://github.com/jakubkrehel/skills) — better-accessibility, better-colors, better-interface, better-layout, better-typography, better-writing, break, build-design, explain-interface, interface-review, state-machine, variant
