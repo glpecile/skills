@@ -96,10 +96,12 @@ reviewed local HEAD. Wait for required checks on that SHA, and inspect mergeabil
 draft status, and required approvals. Stop on failed checks, conflicts, missing
 approvals, or a changed head. Never use an admin override or dismiss reviews.
 
-Use the repository's configured merge method. If none is specified and multiple
-methods are allowed, ask rather than guessing. Merge the explicit PR number with
-`gh pr merge` and `--match-head-commit <reviewed-sha>` so a concurrent push cannot
-silently change what gets merged. Respect merge queues. Auto-merge or queue entry
+Squash and merge PRs by default. Use another merge method only when the user
+explicitly requests it. If the repository does not allow squash merging, stop
+and report the blocker rather than choosing another method. Merge the explicit
+PR number with `gh pr merge <number> --squash --match-head-commit <reviewed-sha>`
+so a concurrent push cannot silently change what gets merged. Replace `--squash`
+only for an explicitly requested method. Respect merge queues. Auto-merge or queue entry
 is pending, not a completed merge. Confirm the PR's actual merged state before
 reporting success. Do not delete branches unless asked.
 
