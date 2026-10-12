@@ -51,6 +51,10 @@ Spawn a read-only review subagent with a self-contained prompt. Include:
 
 Wait for the result before making edits. `ponytail-review` is not a correctness
 or security review, and its approval does not replace tests or required reviews.
+Keep the repository's default review methods in place: perform the normal
+correctness and security review, and use applicable specialist reviews such as
+`ui-review` for interface changes. Ponytail adds a complexity review; it does
+not replace those reviews. Resolve their blocking findings before shipping.
 
 ## 3. Fix and verify
 
