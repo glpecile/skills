@@ -1,0 +1,3 @@
+interface:
+  display_name: "Figma Self Review"
+  short_description: "Diff a built UI against its Figma frame and fix mismatches"

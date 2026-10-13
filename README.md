@@ -26,6 +26,7 @@ git clone git@github.com:glpecile/skills.git ~/Developer/skills
 
 - **[codebase-map](./skills/codebase-map/SKILL.md)** — Create an offline architecture map with sequence diagrams, component-sharing findings, and copyable task handoffs. Includes a Markdown report for agents. Source tracing can take several minutes.
 - **[delegate](./skills/delegate/SKILL.md)** — Plan at session level, delegate implementation to cheaper model subagents, verify each task with a runnable acceptance check.
+- **[figma-self-review](./skills/figma-self-review/SKILL.md)** — Pixel-diff a built UI against its Figma frame, trace each difference to an exact property, fix it, and repeat for up to 3 rounds. Requires the Figma MCP and agent-browser 0.38+.
 - **[review-and-ship](./skills/review-and-ship/SKILL.md)** — Review, simplify, validate, commit and push, and merge an existing PR. Uses `ponytail-review` for the complexity review. Requires that skill installed separately, subagents, Git, and `gh` for PR operations. Previously named `ponytail-merge`.
 
 ## Vendored
