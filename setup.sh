@@ -26,5 +26,5 @@ done
 
 command -v bunx >/dev/null || { echo "bunx not found, skipping manifest"; exit 0; }
 grep -vE '^\s*(#|$)' manifest | while read -r repo skill; do
-  bunx skills add "$repo" --skill "$skill" -g -y -a '*' </dev/null
+  bunx skills add "$repo" --skill "$skill" -g -y --full-depth -a claude-code cursor codex opencode </dev/null
 done

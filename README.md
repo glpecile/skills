@@ -13,7 +13,7 @@ git clone git@github.com:glpecile/skills.git ~/Developer/skills
 
 1. Symlinks every `skills/*` into `~/.agents/skills/`, `~/.claude/skills/`, and the skills dir of each installed agent (Cursor, Codex, OpenCode). Edits in this repo are live everywhere at once.
 2. Prunes symlinks into this repo that no longer resolve.
-3. Installs each line of `manifest` from its upstream repo via `bunx skills add -a '*'` (all detected agents).
+3. Installs each line of `manifest` from its upstream repo via `bunx skills add` for Claude Code, Cursor, Codex, and OpenCode.
 
 `bunx` (Bun) is needed for the manifest step only. Cloning a private repository requires authorized GitHub access.
 
@@ -35,7 +35,7 @@ git clone git@github.com:glpecile/skills.git ~/Developer/skills
 
 ## Manifest
 
-- [emilkowalski/skill](https://github.com/emilkowalski/skill) — animation-vocabulary, apple-design, emil-design-eng, find-animation-opportunities, improve-animations, review-animations
+- [emilkowalski/skill](https://github.com/emilkowalski/skill) — animate, animation-performance, animation-vocabulary, apple-design, emil-design-eng, find-animation-opportunities, improve-animations, mobile-native, pick-ui-library, review-animations
 - [cursor/plugins](https://github.com/cursor/plugins) — unslop
 - [vojtaholik/good-css](https://github.com/vojtaholik/good-css) — good-css
-- [jakubkrehel/skills](https://github.com/jakubkrehel/skills) — better-accessibility, better-colors, better-interface, better-layout, better-typography, better-writing, break, build-design, explain-interface, interface-review, state-machine, variant
+- [jakubkrehel/skills](https://github.com/jakubkrehel/skills) — better-accessibility, better-colors, better-interface, better-layout, better-typography, better-ui, better-writing, break, build-design, explain-interface, interface-review, state-machine, variant
