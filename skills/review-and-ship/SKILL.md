@@ -1,7 +1,7 @@
 ---
 name: review-and-ship
-description: Review, simplify, validate, and publish scoped code changes. Delegate a read-only complexity review, fix findings, then commit and push. Merge the current PR when one exists, then return to main and pull. Use when the user says "review-and-ship", "/review-and-ship", "review and ship", or asks to review, simplify, and publish changes. Do not trigger for review-only requests or a push or merge request that does not ask for the review workflow.
-compatibility: Requires the ponytail-review skill, a subagent tool, git, and GitHub CLI gh for PR operations.
+description: Review, simplify, validate, and publish scoped code changes. Run the harness's built-in code review and a delegated read-only complexity review, fix findings, then commit and push. Merge the current PR when one exists, then return to main and pull. Use when the user says "review-and-ship", "/review-and-ship", "review and ship", or asks to review, simplify, and publish changes. Do not trigger for review-only requests or a push or merge request that does not ask for the review workflow.
+compatibility: Requires the ponytail-review skill, a subagent tool, git, and GitHub CLI gh for PR operations. Uses the harness's built-in review skill (code-review in Claude Code) when one exists.
 ---
 
 # Review and ship
@@ -13,6 +13,11 @@ The workflow name does not depend on the reviewer. Before starting the workflow,
 load that skill and confirm a subagent tool is available. If either prerequisite
 is missing, stop and report it. Do not edit, commit, push, or merge anything,
 and do not substitute an inline review.
+
+The correctness reviewer is the harness's built-in review skill: `code-review`
+in Claude Code. Check the available skills for it before starting. Without one,
+step 2 delegates a correctness review subagent instead, and the final response
+says which reviewer ran.
 
 Own the review-to-ship workflow. Delegate the complexity review, apply the fixes
 yourself, and verify before publishing. Invoking this skill authorizes scoped
@@ -38,9 +43,19 @@ changes, creating a PR, or bypassing repository protections.
   that there is nothing to review.
 - If there is no change to review or publish and no open PR, report that and stop.
 
-## 2. Delegate the review
+## 2. Run both reviews
 
-Spawn a read-only review subagent with a self-contained prompt. Include:
+Run the two reviews in parallel. They look for different things, so neither
+one replaces the other.
+
+**Correctness.** Invoke the harness's built-in review skill on the same target:
+in Claude Code, `code-review` with the PR number, or with no argument for the
+local diff. Never pass `--comment`, because it posts to the PR before you have
+triaged the findings. Never pass `--fix`, because step 3 applies fixes after
+triage. Without a built-in review skill, spawn a second read-only subagent with
+the same scope and an instruction to review correctness and security only.
+
+**Complexity.** Spawn a read-only review subagent with a self-contained prompt. Include:
 
 - The repository path, repository instructions, comparison base, and exact
   scoped files or diff, including relevant untracked files.
@@ -50,12 +65,12 @@ Spawn a read-only review subagent with a self-contained prompt. Include:
 - An instruction to review over-engineering only and use that skill's finding
   format. The subagent must not edit, commit, push, merge, or spawn more agents.
 
-Wait for the result before making edits. `ponytail-review` is not a correctness
-or security review, and its approval does not replace tests or required reviews.
-Keep the repository's default review methods in place: perform the normal
-correctness and security review, and use applicable specialist reviews such as
-`ui-review` for interface changes. Ponytail adds a complexity review; it does
-not replace those reviews. Resolve their blocking findings before shipping.
+Wait for both results before making edits. Neither review's approval replaces
+tests or required reviews. Keep the repository's other review methods in place,
+and use applicable specialist reviews such as `ui-review` for interface changes.
+Resolve blocking findings from every review before shipping. When the two
+reviews conflict, such as a deletion that would remove a guard the correctness
+review asked for, correctness wins.
 
 ## 3. Fix and verify
 
@@ -69,8 +84,8 @@ Do not delete tests to satisfy the complexity review. Report unavailable checks;
 do not claim they passed. Stop shipping if validation fails or cannot establish
 that the changes work.
 
-After edits, rerun the review subagent on the updated full scoped diff and include
-the disposition of earlier findings. Allow at most three review rounds total.
+After edits, rerun each review that had actionable findings on the updated full
+scoped diff, and include the disposition of earlier findings. Allow at most three review rounds total.
 Ship only when no actionable findings remain. If the reviewer keeps finding
 issues or a disagreement remains unresolved, stop with the remaining findings.
 
@@ -114,6 +129,6 @@ but local cleanup is blocked.
 
 ## Final response
 
-Report the fixes, validation results, commit and push status, and PR merge status
+Report which reviewers ran, the fixes, validation results, commit and push status, and PR merge status
 or blocker. Include the PR link when available and say whether the checkout is
 back on updated `main`. Do not describe a queued merge as merged.
