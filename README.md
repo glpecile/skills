@@ -1,14 +1,31 @@
 # Skills
 
-Personal collection of [agent skills](https://agentskills.io) for Claude Code, Cursor, Codex, and OpenCode, plus a one-shot setup for a new machine.
+Agent skills that help you hand work to coding agents and check what comes back, from mapping a codebase to shipping the PR.
 
-Install a single skill without cloning:
+They come from my day-to-day work with Claude Code, Cursor, Codex and OpenCode. Each skill is a workflow I kept repeating by hand: it gives the agent a process to follow and the checks to run before it says it is done.
+
+## Skills
+
+- [**codebase-map**](./skills/codebase-map/SKILL.md): Creates an offline, interactive **architecture map** with **sequence diagrams**, **component-sharing** findings and copyable **task handoffs**, plus a Markdown report for agents. Source tracing can take several minutes.
+- [**delegate**](./skills/delegate/SKILL.md): Plans at session level, hands implementation to **cheaper model subagents**, and verifies each task with a **runnable acceptance check** in a goal loop.
+- [**figma-self-review**](./skills/figma-self-review/SKILL.md): Checks UI you already built against its **Figma frame**. It compares **structure**, **pixel-diffs** both renders, traces each difference to an **exact property**, fixes it, and repeats for up to 3 rounds. Needs the Figma MCP and agent-browser 0.38+, or another headless browser plus ImageMagick 7.
+- [**review-and-ship**](./skills/review-and-ship/SKILL.md): Runs the harness's built-in **code review** for correctness and `ponytail-review` for **complexity**, fixes the findings, **validates**, then **commits, pushes** and **squash-merges** an existing PR. Needs `ponytail-review`, subagents, Git and `gh`. User-invoked.
+
+## Install
+
+```bash
+npx skills add glpecile/skills
+```
+
+Or a single skill:
 
 ```bash
 npx skills add glpecile/skills --skill figma-self-review
 ```
 
-## Setup
+## My setup
+
+This repo is also how I set up a new machine.
 
 ```bash
 git clone git@github.com:glpecile/skills.git ~/Developer/skills
@@ -25,19 +42,12 @@ Agents installing this repo: run `./setup.sh` after cloning; cloning alone insta
 
 `bunx` (Bun) is needed for the manifest step only.
 
-## Layout
+### Layout
 
 - `skills/` — own skills only. Symlinked. Third-party skills with no installable upstream live in the private dotfiles repo under `skills/`, never here. `agents/openai.yaml` inside a skill is Codex display metadata.
 - `manifest` — `owner/repo skill-name` per line for skills that live in a public repo. Installed as copies, updated with `bunx skills update -g`.
 
-## Own
-
-- **[codebase-map](./skills/codebase-map/SKILL.md)** — Create an offline architecture map with sequence diagrams, component-sharing findings, and copyable task handoffs. Includes a Markdown report for agents. Source tracing can take several minutes.
-- **[delegate](./skills/delegate/SKILL.md)** — Plan at session level, delegate implementation to cheaper model subagents, verify each task with a runnable acceptance check.
-- **[figma-self-review](./skills/figma-self-review/SKILL.md)** — Pixel-diff a built UI against its Figma frame, trace each difference to an exact property, fix it, and repeat for up to 3 rounds. Requires the Figma MCP and agent-browser 0.38+, or another headless browser plus ImageMagick 7.
-- **[review-and-ship](./skills/review-and-ship/SKILL.md)** — Review, simplify, validate, commit and push, and merge an existing PR. Runs the harness's built-in code review (`code-review` in Claude Code) for correctness and `ponytail-review` for complexity. Requires `ponytail-review` installed separately, subagents, Git, and `gh` for PR operations. Previously named `ponytail-merge`.
-
-## Manifest
+### Manifest
 
 - [emilkowalski/skill](https://github.com/emilkowalski/skill) — animate, animation-performance, animation-vocabulary, apple-design, emil-design-eng, find-animation-opportunities, improve-animations, mobile-native, pick-ui-library, review-animations
 - [cursor/plugins](https://github.com/cursor/plugins) — unslop
