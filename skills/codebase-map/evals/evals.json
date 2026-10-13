@@ -1,0 +1,19 @@
+{
+  "skill_name": "codebase-map",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Map the frontend repository in the current working directory. Help me understand its components, which responsibilities are properly shared, which might not be, and how state flows through the app. Focus on patterns and boundaries useful for delegating tasks, not a symbol inventory. Do not modify the application.",
+      "expected_output": "Offline interactive HTML and synchronized Markdown with evidence-backed component reuse, state ownership, log/refetch and hide sequence diagrams, intentional differences, and scoped delegation candidates. Use short, direct sentences. Provide per-component, per-finding, per-flow, section, and full-report handoffs. Distinguish static tracing from runtime verification.",
+      "files": [],
+      "assertions": [
+        "The agent warns before tracing that the run can take several minutes.",
+        "State flows have participant lifelines and source-backed messages, plus a step-list alternative.",
+        "The HTML includes per-component, per-finding, per-flow, section, and full-report copyable handoffs with snapshot, source references, contracts, and checks.",
+        "A blocked clipboard shows selectable handoff text rather than false success.",
+        "The page has no horizontal document overflow at 320px and has readable desktop diagrams.",
+        "Source-traced observations are distinguished from runtime verification, and the target application's source is unchanged."
+      ]
+    }
+  ]
+}

@@ -1,14 +1,15 @@
 ---
-name: ponytail-merge
-description: Delegate ponytail-review to a read-only subagent, fix its findings, validate, then commit and push the scoped changes. Merge the current PR when one exists, then return to main and pull. Use when the user says "ponytail-merge", "/ponytail-merge", "ponytail merge", or asks to review, simplify, and ship changes with ponytail. Do not trigger for review-only requests or ordinary merge requests that do not ask for ponytail.
+name: review-and-ship
+description: Review, simplify, validate, and publish scoped code changes. Delegate a read-only complexity review, fix findings, then commit and push. Merge the current PR when one exists, then return to main and pull. Use when the user says "review-and-ship", "/review-and-ship", "review and ship", or asks to review, simplify, and publish changes. Do not trigger for review-only requests or a push or merge request that does not ask for the review workflow.
 compatibility: Requires the ponytail-review skill, a subagent tool, git, and GitHub CLI gh for PR operations.
 ---
 
-# Ponytail merge
+# Review and ship
 
 ## Required dependency
 
-`ponytail-review` must be installed separately. Before starting the workflow,
+The default complexity reviewer is `ponytail-review`, installed separately.
+The workflow name does not depend on the reviewer. Before starting the workflow,
 load that skill and confirm a subagent tool is available. If either prerequisite
 is missing, stop and report it. Do not edit, commit, push, or merge anything,
 and do not substitute an inline review.

@@ -1,0 +1,3 @@
+interface:
+  display_name: "Codebase Map"
+  short_description: "Explore architecture, state flows, and component reuse"

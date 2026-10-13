@@ -15,7 +15,7 @@ git clone git@github.com:glpecile/skills.git ~/Developer/skills
 2. Prunes symlinks into this repo that no longer resolve.
 3. Installs each line of `manifest` from its upstream repo via `bunx skills add -a '*'` (all detected agents).
 
-Private repo — requires git access (SSH) to clone. `bunx` (Bun) is needed for the manifest step only.
+`bunx` (Bun) is needed for the manifest step only. Cloning a private repository requires authorized GitHub access.
 
 ## Layout
 
@@ -24,8 +24,9 @@ Private repo — requires git access (SSH) to clone. `bunx` (Bun) is needed for 
 
 ## Own
 
+- **[codebase-map](./skills/codebase-map/SKILL.md)** — Create an offline architecture map with sequence diagrams, component-sharing findings, and copyable task handoffs. Includes a Markdown report for agents. Source tracing can take several minutes.
 - **[delegate](./skills/delegate/SKILL.md)** — Plan at session level, delegate implementation to cheaper model subagents, verify each task with a runnable acceptance check.
-- **[ponytail-merge](./skills/ponytail-merge/SKILL.md)** — Delegate `ponytail-review`, fix findings, validate, commit and push, and merge an existing PR. Requires `ponytail-review` installed separately, subagents, Git, and `gh` for PR operations.
+- **[review-and-ship](./skills/review-and-ship/SKILL.md)** — Review, simplify, validate, commit and push, and merge an existing PR. Uses `ponytail-review` for the complexity review. Requires that skill installed separately, subagents, Git, and `gh` for PR operations. Previously named `ponytail-merge`.
 
 ## Vendored
 
