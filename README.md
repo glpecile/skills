@@ -2,6 +2,12 @@
 
 Personal collection of [agent skills](https://agentskills.io) for Claude Code, Cursor, Codex, and OpenCode, plus a one-shot setup for a new machine.
 
+Install a single skill without cloning:
+
+```bash
+npx skills add glpecile/skills --skill figma-self-review
+```
+
 ## Setup
 
 ```bash
@@ -13,15 +19,15 @@ Agents installing this repo: run `./setup.sh` after cloning; cloning alone insta
 
 `setup.sh` is idempotent:
 
-1. Symlinks every `skills/*` into `~/.agents/skills/`, `~/.claude/skills/`, and the skills dir of each installed agent (Cursor, Codex, OpenCode). Edits in this repo are live everywhere at once.
-2. Prunes symlinks into this repo that no longer resolve.
+1. Symlinks every `skills/*`, plus `~/dotfiles/skills/*` when that private repo is cloned, into `~/.agents/skills/`, `~/.claude/skills/`, and the skills dir of each installed agent (Cursor, Codex, OpenCode). Edits in this repo are live everywhere at once.
+2. Prunes symlinks into this repo or `~/dotfiles` that no longer resolve.
 3. Installs each line of `manifest` from its upstream repo via `bunx skills add` for Claude Code, Cursor, Codex, and OpenCode.
 
-`bunx` (Bun) is needed for the manifest step only. Cloning a private repository requires authorized GitHub access.
+`bunx` (Bun) is needed for the manifest step only.
 
 ## Layout
 
-- `skills/` — own skills and vendored third-party skills that have no installable upstream. Symlinked. `agents/openai.yaml` inside a skill is Codex display metadata.
+- `skills/` — own skills only. Symlinked. Third-party skills with no installable upstream live in the private dotfiles repo under `skills/`, never here. `agents/openai.yaml` inside a skill is Codex display metadata.
 - `manifest` — `owner/repo skill-name` per line for skills that live in a public repo. Installed as copies, updated with `bunx skills update -g`.
 
 ## Own
@@ -31,14 +37,13 @@ Agents installing this repo: run `./setup.sh` after cloning; cloning alone insta
 - **[figma-self-review](./skills/figma-self-review/SKILL.md)** — Pixel-diff a built UI against its Figma frame, trace each difference to an exact property, fix it, and repeat for up to 3 rounds. Requires the Figma MCP and agent-browser 0.38+.
 - **[review-and-ship](./skills/review-and-ship/SKILL.md)** — Review, simplify, validate, commit and push, and merge an existing PR. Uses `ponytail-review` for the complexity review. Requires that skill installed separately, subagents, Git, and `gh` for PR operations. Previously named `ponytail-merge`.
 
-## Vendored
-
-- **before-and-after** — from [vercel-labs/before-and-after](https://github.com/vercel-labs/before-and-after). Vendored because the upstream calls its script by a repo-relative path; here it points at `~/.claude/skills/before-and-after/scripts/format.mjs`. Needs `agent-browser` and `gh` 2.99+.
-- **animations, color, component-design, design-foundations, design-vocabulary, engineering-vocabulary, forms-and-inputs, marketing-pages, performance, surfaces, touch-and-accessibility, typography, ui-polish, ui-review, writing-skills** — the index.how design bundle. No git upstream found; kept as copies.
-
 ## Manifest
 
 - [emilkowalski/skill](https://github.com/emilkowalski/skill) — animate, animation-performance, animation-vocabulary, apple-design, emil-design-eng, find-animation-opportunities, improve-animations, mobile-native, pick-ui-library, review-animations
 - [cursor/plugins](https://github.com/cursor/plugins) — unslop
 - [vojtaholik/good-css](https://github.com/vojtaholik/good-css) — good-css
 - [jakubkrehel/skills](https://github.com/jakubkrehel/skills) — better-accessibility, better-colors, better-interface, better-layout, better-typography, better-ui, better-writing, break, build-design, explain-interface, interface-review, state-machine, variant
+
+## License
+
+[MIT](./LICENSE), covering the skills in `skills/`. Manifest entries keep their upstream licenses.
