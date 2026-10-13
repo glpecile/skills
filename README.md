@@ -9,6 +9,8 @@ git clone git@github.com:glpecile/skills.git ~/Developer/skills
 ~/Developer/skills/setup.sh
 ```
 
+Agents installing this repo: run `./setup.sh` after cloning; cloning alone installs nothing. Rules for agents live in [AGENTS.md](./AGENTS.md).
+
 `setup.sh` is idempotent:
 
 1. Symlinks every `skills/*` into `~/.agents/skills/`, `~/.claude/skills/`, and the skills dir of each installed agent (Cursor, Codex, OpenCode). Edits in this repo are live everywhere at once.
