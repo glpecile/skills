@@ -1,7 +1,5 @@
 # Skills
 
-[![skills.sh](https://skills.sh/b/glpecile/skills)](https://skills.sh/glpecile/skills)
-
 Agent skills that help you hand work to coding agents and check what comes back, from mapping a codebase to shipping the PR.
 
 They come from my day-to-day work with Claude Code, Cursor, Codex and OpenCode. Each skill is a workflow I kept repeating by hand: it gives the agent a process to follow and the checks to run before it says it is done.
