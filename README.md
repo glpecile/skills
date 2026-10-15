@@ -9,7 +9,7 @@ They come from my day-to-day work with Claude Code, Cursor, Codex and OpenCode. 
 - [**codebase-map**](./skills/codebase-map/SKILL.md): Creates an offline, interactive **architecture map** with **sequence diagrams**, **component-sharing** findings and copyable **task handoffs**, plus a Markdown report for agents. Source tracing can take several minutes.
 - [**delegate**](./skills/delegate/SKILL.md): Plans at session level, hands implementation to **cheaper model subagents**, and verifies each task with a **runnable acceptance check** in a goal loop.
 - [**figma-self-review**](./skills/figma-self-review/SKILL.md): Checks UI you already built against its **Figma frame**. It compares **structure**, **pixel-diffs** both renders, traces each difference to an **exact property**, fixes it, and repeats for up to 3 rounds. Needs the Figma MCP and agent-browser 0.38+, or another headless browser plus ImageMagick 7.
-- [**review-and-ship**](./skills/review-and-ship/SKILL.md): Runs the harness's built-in **code review** for correctness and `ponytail-review` for **complexity**, fixes the findings, **validates**, then **commits, pushes** and **squash-merges** an existing PR. Needs `ponytail-review`, subagents, Git and `gh`. User-invoked.
+- [**review-and-ship**](./skills/review-and-ship/SKILL.md): Runs the harness's built-in **code review** for correctness and `ponytail-review` for **complexity**, fixes the findings, **validates**, then **commits, pushes**, **creates a PR** if none exists and **squash-merges** it. Needs `ponytail-review`, subagents, Git and `gh`. User-invoked.
 
 ## Install
 

@@ -1,6 +1,6 @@
 ---
 name: review-and-ship
-description: Review, simplify, validate, and publish scoped code changes. Run the harness's built-in code review and a delegated read-only complexity review, fix findings, then commit and push. Merge the current PR when one exists, then return to main and pull. Use when the user says "review-and-ship", "/review-and-ship", "review and ship", or asks to review, simplify, and publish changes. Do not trigger for review-only requests or a push or merge request that does not ask for the review workflow.
+description: Review, simplify, validate, and publish scoped code changes. Run the harness's built-in code review and a delegated read-only complexity review, fix findings, then commit and push. Create a PR if none exists, merge it, then return to main and pull. Use when the user says "review-and-ship", "/review-and-ship", "review and ship", or asks to review, simplify, and publish changes. Do not trigger for review-only requests or a push or merge request that does not ask for the review workflow.
 compatibility: Requires the ponytail-review skill, a subagent tool, git, and GitHub CLI gh for PR operations. Uses the harness's built-in review skill (code-review in Claude Code) when one exists.
 ---
 
@@ -21,8 +21,8 @@ says which reviewer ran.
 
 Own the review-to-ship workflow. Delegate the complexity review, apply the fixes
 yourself, and verify before publishing. Invoking this skill authorizes scoped
-commits, pushes, and merging an existing PR. It does not authorize unrelated
-changes, creating a PR, or bypassing repository protections.
+commits, pushes, PR creation, and merging. It does not authorize unrelated
+changes or bypassing repository protections.
 
 ## 1. Establish the target
 
@@ -36,9 +36,12 @@ changes, creating a PR, or bypassing repository protections.
 - Define the shipping scope from the user's task and its changes. Include
   uncommitted work in that scope, not every dirty file. If ownership is unclear,
   ask which changes to include. Preserve unrelated staged changes too.
+- Without a PR, resolve the intended base branch from the user's request or the
+  repository's default branch. If on the default or a protected branch, create
+  a feature branch before committing or pushing, preserving local work.
 - For a PR, review the full branch diff against its base plus scoped local
-  changes and untracked file contents. Without a PR, use the upstream or known
-  branch point to include unpublished commits as well as scoped local changes.
+  changes and untracked file contents. Without a PR, compare against the intended
+  base to include unpublished commits as well as scoped local changes.
   Ask if there is no reliable comparison base. A clean working tree is not proof
   that there is nothing to review.
 - If there is no change to review or publish and no open PR, report that and stop.
@@ -101,14 +104,20 @@ issues or a disagreement remains unresolved, stop with the remaining findings.
   an upstream if needed. Confirm what commits will be published. Never force
   push or rewrite existing commits. A rejected push is a blocker, not permission
   to reset or rebase the user's work.
-- Without a PR, stop after the push. Do not create a PR or merge locally. Ask
-  before publishing directly to the default or a protected branch unless the
-  user explicitly requested that destination.
+- Do not publish directly to the default or a protected branch unless the user
+  explicitly requested that destination.
 
-## 5. Merge an existing PR
+## 5. Create or reuse a PR, then merge
 
-Re-fetch PR metadata after pushing. Verify that the remote head SHA equals the
-reviewed local HEAD. Wait for required checks on that SHA, and inspect mergeability,
+After pushing, look again for an open PR matching the verified head branch and
+repository, so a PR opened during the review is reused rather than duplicated.
+If none exists, create one with `gh pr create`, explicitly setting the base and
+head. Use a descriptive title and summarize the scoped changes and validation
+in the body. Record the new PR's number and URL. If creation fails, stop and
+report the blocker; do not merge locally or fall back to a direct push.
+
+Re-fetch PR metadata. Verify that its base matches the reviewed base and that the
+remote head SHA equals the reviewed local HEAD. Wait for required checks on that SHA, and inspect mergeability,
 draft status, and required approvals. Stop on failed checks, conflicts, missing
 approvals, or a changed head. Never use an admin override or dismiss reviews.
 
