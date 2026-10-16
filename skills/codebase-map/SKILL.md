@@ -1,6 +1,7 @@
 ---
 name: codebase-map
 description: Generate an evidence-backed interactive HTML architecture map and companion Markdown for understanding a codebase and delegating work. Use when the user wants the bigger picture, interactive UML-like diagrams, component sharing analysis, state/data flow, subsystem responsibilities, dependency injection or persistence maps, or architectural boundaries for scoped agent tasks. Not a symbol inventory, implementation task, or automatic refactoring tool.
+compatibility: Requires sh and jq 1.6+ for the renderer. Without jq, the skill falls back to filling the template by hand.
 ---
 
 # Codebase map
@@ -90,8 +91,21 @@ Write artifacts outside the target repo unless the user asks otherwise. Default
 to a fresh directory beneath the harness-approved temp directory (otherwise the
 OS temp directory). Tell the user the absolute paths.
 
-Use a single JSON model and `scripts/render.py` to produce offline `index.html`
-and `architecture.md`. The renderer needs Python 3; no CDN, server or build step.
+Use a single JSON model and `scripts/render.sh` to produce offline `index.html`
+and `architecture.md`. The renderer needs `sh` and jq 1.6+; no CDN, server or build step.
+
+If `render.sh` exits 127, jq is missing or older than 1.6. Ask the user to
+install it with the command the script prints, then rerun. Never install it
+yourself: a system package change is the user's decision. If the user declines:
+
+1. Walk the validation rules at the top of `render.sh` by hand against the model.
+2. Copy `assets/explorer.html`. Replace `__DATA__` with the model JSON, writing
+   every `<`, `>` and `&` inside strings as `<`, `>` and `&` so
+   repository text cannot close the script tag. Replace `__TITLE__` with the
+   title, HTML-escaped.
+3. Write `architecture.md` yourself in the section order of the Markdown
+   program in `render.sh`.
+4. Tell the user the renderer did not run, so validation was manual.
 For dense maps, split views rather than squeezing the whole repository onto one
 canvas. Give each view 2–4 responsibility columns with 2–4 nodes each; columns
 set node positions, not causality. Edges describe the actual relationship.
@@ -100,13 +114,13 @@ set node positions, not causality. Edges describe the actual relationship.
 
 Use the bundled template as is. It already provides the inspector, search,
 disclosures, list alternative, fit/zoom, reduced motion, copyable handoffs and
-the manual-copy fallback, and `test_render.py` covers them. Your job is the
+the manual-copy fallback, and `scripts/test.sh` covers them. Your job is the
 model content, not the page.
 
 If the user asks you to change the template, load `better-layout`,
 `better-typography`, `better-accessibility` and `emil-design-eng` first; if one is
 unavailable, say so instead of claiming the review. Keep every feature listed
-above, then run `python3 -m unittest discover -s <skill-dir>/scripts`.
+above, then run `sh <skill-dir>/scripts/test.sh`.
 
 When browser automation is available, inspect a real screenshot at 320px and
 desktop widths before presenting. DOM tests alone cannot approve diagram
@@ -156,7 +170,7 @@ Model structure (all text is plain text, never HTML):
 ```
 
 ```sh
-python3 <skill-dir>/scripts/render.py <map.json> <output-dir>
+sh <skill-dir>/scripts/render.sh <map.json> <output-dir>
 ```
 
 Optional sequence data on each flow:
