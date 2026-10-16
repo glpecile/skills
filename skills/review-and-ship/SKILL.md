@@ -1,6 +1,7 @@
 ---
 name: review-and-ship
 description: Review, simplify, validate, and publish scoped code changes. Run the harness's built-in code review and a delegated read-only complexity review, fix findings, then commit and push. Create a PR if none exists, merge it, then return to main and pull. Use when the user says "review-and-ship", "/review-and-ship", "review and ship", or asks to review, simplify, and publish changes. Do not trigger for review-only requests or a push or merge request that does not ask for the review workflow.
+disable-model-invocation: true
 compatibility: Requires the ponytail-review skill, a subagent tool, git, and GitHub CLI gh for PR operations. Uses the harness's built-in review skill (code-review in Claude Code) when one exists.
 ---
 
@@ -35,7 +36,7 @@ changes or bypassing repository protections.
   when local changes can be preserved safely; otherwise stop and report it.
 - Define the shipping scope from the user's task and its changes. Include
   uncommitted work in that scope, not every dirty file. If ownership is unclear,
-  ask which changes to include. Preserve unrelated staged changes too.
+  ask which changes to include.
 - Without a PR, resolve the intended base branch from the user's request or the
   repository's default branch. If on the default or a protected branch, create
   a feature branch before committing or pushing, preserving local work.
@@ -69,8 +70,9 @@ the same scope and an instruction to review correctness and security only.
   format. The subagent must not edit, commit, push, merge, or spawn more agents.
 
 Wait for both results before making edits. Neither review's approval replaces
-tests or required reviews. Keep the repository's other review methods in place,
-and use applicable specialist reviews such as `ui-review` for interface changes.
+tests or required reviews. Keep the repository's other review methods in place.
+If the diff touches UI files (components, styles, templates) and `ui-review` is
+available, run it as a third review.
 Resolve blocking findings from every review before shipping. When the two
 reviews conflict, such as a deletion that would remove a guard the correctness
 review asked for, correctness wins.

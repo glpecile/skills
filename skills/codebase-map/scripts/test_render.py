@@ -11,7 +11,7 @@ from render import validate
 
 
 MODEL = {
-    'title': 'Map </script><script>alert(1)</script>',
+    'title': 'Map </script><script>alert(1)</script> __DATA__',
     'snapshot': 'Example commit', 'scope': 'Example slice', 'summary': ['Summary'],
     'nodes': [{'id': 'a', 'label': 'Component', 'group': 'UI', 'purpose': 'Purpose',
                'pattern': 'Pattern', 'state': 'State', 'contracts': ['Keep behavior'],
@@ -33,6 +33,7 @@ class RenderTest(unittest.TestCase):
             page = (path / 'index.html').read_text()
             self.assertNotIn('</script><script>alert(1)', page)
             self.assertIn('Map &lt;/script&gt;', page)
+            self.assertIn('<title>Map &lt;/script&gt;&lt;script&gt;alert(1)&lt;/script&gt; __DATA__</title>', page)
             self.assertNotIn('src="http', page)
             self.assertIn('Copy report handoff', page)
             self.assertIn('Clipboard access is unavailable', page)

@@ -6,7 +6,7 @@ compatibility: Requires the Figma MCP server, a running local build, and agent-b
 
 # Figma self-review
 
-This skill owns one loop: Figma render in, pixel diff out, fix, repeat. Reading the design and mapping it to tokens belong to `build-design` and `figma-design-to-code`. Browser sessions and capture belong to `agent-browser`. Load `agent-browser skills get core --full` before the first capture.
+This skill owns one loop: Figma render in, pixel diff out, fix, repeat. Reading the design and mapping it to tokens belong to `build-design` and `figma-design-to-code`. Browser sessions and capture belong to `agent-browser`. Before the first capture, run `agent-browser skills get core --full` and read its output.
 
 The design decides. A difference is either something you fix or something you report. You never resolve one by changing the design's intent.
 
@@ -29,7 +29,7 @@ Pixel diffs only work on images that have the same dimensions and the same scale
 3. Export the frame with `download_assets`, setting `defaultFormat: "png"` and `defaultScale` to that ratio. Download the `export` URL right away, because it expires: `curl -sL "<url>" -o captures/figma/<frame>.png`. Use `get_screenshot` with `maxDimension` set to the longer frame edge times the ratio only when `download_assets` fails.
 4. Bring the build into the state the frame shows, including scroll position, open menus, and hover. Use the same copy and images when the frame draws specific ones and the app allows it.
 5. Screenshot the root only: `agent-browser screenshot '<selector>' captures/build/<frame>.png`. A whole-page screenshot compares page chrome the frame does not contain.
-6. Compare dimensions with `sips -g pixelWidth -g pixelHeight` on both files.
+6. Compare dimensions with `magick identify -format '%wx%h\n'` on both files (`sips -g pixelWidth -g pixelHeight` on macOS without ImageMagick).
 
 ```text
 Same width and height?
@@ -105,7 +105,7 @@ Is the difference in your code?
     │   Its text renders wider, so size columns from the built natural widths (step 3), not from Figma's.
     ├── The nearest token is more than 2px away or on a different color step → Ask. Do not add a token.
     ├── A design-system component or layout sets a value the design does not match → Ask. Never override it locally.
-    ├── The design breaks an accessibility, contrast, or focus rule → Keep the design and report the conflict
+    ├── The design breaks an accessibility, contrast, or focus rule → Keep the design. Report as Conflict
     └── Anything else you built differently → Fix
 ```
 

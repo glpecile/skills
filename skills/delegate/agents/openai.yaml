@@ -1,0 +1,3 @@
+interface:
+  display_name: "Delegate"
+  short_description: "Plan in session, hand tasks to cheaper subagents, verify each"

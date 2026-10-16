@@ -64,7 +64,8 @@ def main():
     output.mkdir(parents=True, exist_ok=True)
     encoded = json.dumps(data, ensure_ascii=False).replace('<', '\\u003c').replace('>', '\\u003e').replace('&', '\\u0026')
     template = (Path(__file__).resolve().parent.parent / 'assets' / 'explorer.html').read_text()
-    page = template.replace('__TITLE__', html.escape(data['title'])).replace('__DATA__', encoded)
+    head, tail = template.split('__DATA__')
+    page = head.replace('__TITLE__', html.escape(data['title'])) + encoded + tail
     (output / 'index.html').write_text(page)
     (output / 'architecture.md').write_text(markdown(data))
     print(output / 'index.html')

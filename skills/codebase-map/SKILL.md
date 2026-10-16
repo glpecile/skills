@@ -21,7 +21,13 @@ rediscovering the entire repository. Keep source code unchanged.
   not a live guarantee. Read storage implementation code, never persisted tokens,
   secrets or environment values.
 - Use the user's focus to select representative vertical slices. For a broad
-  request, start with entry points, composition root, state and external I/O.
+  request, rank areas by recent churn first, because that is where delegated
+  work will land:
+  `git log --since=6.months --name-only --format= | sort | uniq -c | sort -rn | head -40`.
+  Ignore lockfiles, generated paths and paths that no longer exist. Trace slices through the
+  hottest areas, then connect them through entry points, composition root,
+  state and external I/O. Without useful history (a shallow clone, or a single
+  squashed commit), start from entry points and say so in `scope`.
   Exclude generated code, dependencies and build output.
 - Distinguish documented intent from observed implementation. If they disagree,
   show both with references; do not silently repeat the docs.
@@ -63,6 +69,11 @@ When investigating sharing:
 
 1. Find existing reuse and actual consumers before recommending extraction.
 2. Compare responsibilities and behavior, not just JSX shape or names.
+   Apply the deletion test to each suspected shared or pass-through module:
+   imagine inlining it into its callers. If its logic would reappear in several
+   callers, it earns its place (existing reuse). If the logic would only move
+   to one caller, it is a pass-through: report a boundary mismatch, citing the
+   one caller as evidence.
 3. Separate shared interaction/presentation from feature-specific policy.
 4. Classify each observation as existing reuse, confirmed repeated mechanism,
    boundary mismatch, intentional difference or unverified hypothesis.
@@ -81,56 +92,37 @@ OS temp directory). Tell the user the absolute paths.
 
 Use a single JSON model and `scripts/render.py` to produce offline `index.html`
 and `architecture.md`. The renderer needs Python 3; no CDN, server or build step.
-The HTML includes selectable subsystem graphs, node details, labeled edges,
-  search, flow steps, sharing findings and delegation boundaries. For dense maps,
-  split views rather than squeezing the whole repository onto one canvas. Give
-  each view 2–4 responsibility columns with 2–4 nodes each; columns set node
-  positions, not causality. Edges describe the actual relationship. Keep edge
-  labels in the inspector so they do not overlap the diagram.
+For dense maps, split views rather than squeezing the whole repository onto one
+canvas. Give each view 2–4 responsibility columns with 2–4 nodes each; columns
+set node positions, not causality. Edges describe the actual relationship.
 
-### Presentation defaults
+### Template
 
-- Lead with the map, not an introductory essay. Use section navigation, a
-  diagram workspace and one selected-component inspector.
-- Use the bundled template. Apply Jakub's better-layout, better-typography and
-  accessibility guidance plus Emil's interaction guidance when extending it.
-  Load available skills; if unavailable, disclose that instead of claiming review.
-- Show names and relationship structure on the diagram. Put purposes, state,
-  contracts and source references in the inspector. Keep findings and source
-  lists behind labeled disclosures so long text does not bury the map.
-- Use neutral surfaces, one selection accent, a small type scale and consistent
-  spacing. Keep body copy readable; do not squeeze complete descriptions into
-  fixed-size nodes. Use no taglines, decorative gradients or entrance sequences.
-- Keep frequent actions immediate. Use restrained press feedback, visible focus
-  and reduced-motion support. Use native buttons and disclosures.
-- Provide a list alternative on narrow screens and explicit fit/zoom controls
-  for the two-dimensional diagram. Check 320px and desktop widths.
-- Inspect a real browser screenshot before presenting the HTML when browser
-  automation is available. DOM tests alone cannot approve diagram readability.
+Use the bundled template as is. It already provides the inspector, search,
+disclosures, list alternative, fit/zoom, reduced motion, copyable handoffs and
+the manual-copy fallback, and `test_render.py` covers them. Your job is the
+model content, not the page.
 
-### Copyable handoffs
+If the user asks you to change the template, load `better-layout`,
+`better-typography`, `better-accessibility` and `emil-design-eng` first; if one is
+unavailable, say so instead of claiming the review. Keep every feature listed
+above, then run `python3 -m unittest discover -s <skill-dir>/scripts`.
 
-Include a copy action for the full report, each section, each component, each
-flow, each finding and each proposed task. Generate handoffs from the same
-model as the report so scope and claims cannot drift.
+When browser automation is available, inspect a real screenshot at 320px and
+desktop widths before presenting. DOM tests alone cannot approve diagram
+readability.
 
-Each handoff names the repository and inspected commit, explains the selected
-responsibility, lists evidence, states a proposed improvement scope, preserves
-the relevant contracts and names existing checks. Include uncertainty and
-coordination requirements. Tell the receiving agent to verify current source
-before acting: a report may already be stale. Findings are suggestions, not
-permission to edit unrelated files. Do not invent a task for existing reuse or
-an intentional difference.
+### Handoff content
 
-Confirm copy success. If the clipboard API is unavailable (including some
-file:// contexts), show a labeled, selectable text field with the complete
-handoff and explain how to copy it manually. Never claim success after a failed
-clipboard write.
+The template builds handoffs from the model and adds the snapshot and a
+verify-before-acting preamble. Make the model entries carry the rest: each
+delegation task states its scope, the contracts to preserve, existing checks,
+uncertainty and coordination with other tasks. Do not invent a task for existing
+reuse or an intentional difference.
 
 ### Language
 
-Use STE100 as the writing guide. Do not claim certified compliance without
-checking the approved-word dictionary. Keep established technical names such as
+Use STE100 as the writing guide. Keep established technical names such as
 QueryClient, provider, mutation and dependency injection; define unfamiliar
 terms once. Use the same term for the same object everywhere.
 
@@ -154,7 +146,7 @@ Model structure (all text is plain text, never HTML):
   "scope": "Inspected slices and what was not covered",
   "summary": ["Architecture conclusions"],
   "checks": ["Existing repo validation command"],
-  "nodes": [{"id":"cache", "label":"Query cache", "group":"State", "purpose":"...", "pattern":"...", "state":"Owner; writers; readers; lifetime; persistence; signal", "contracts":["..."], "sources":["src/cache.ts:12-40"]}],
+  "nodes": [{"id":"cache", "label":"Query cache", "group":"State", "purpose":"...", "pattern":"...", "state":"Owner; writers; readers; lifetime; persistence; signal", "stateFields":{"Owner":"...", "Writers":"...", "Readers":"...", "Lifetime":"...", "Update":"..."}, "contracts":["..."], "sources":["src/cache.ts:12-40"]}],
   "views": [{"id":"overview", "label":"Overview", "nodes":["cache"], "columns":[{"label":"State", "nodes":["cache"]}], "edges":[{"from":"cache", "to":"cache", "label":"relationship", "evidence":"src/cache.ts:12"}]}],
   "flows": [{"title":"Log an item", "steps":[{"node":"cache", "text":"What happens and why", "evidence":"src/cache.ts:12"}], "failure":"Failure and recovery behavior"}],
   "findings": [{"title":"...", "classification":"Existing reuse / Repeated mechanism / Boundary mismatch / Intentional difference / Hypothesis", "detail":"Evidence and consequence", "preserve":"Behavior that must stay distinct", "sources":["src/cache.ts:12"]}],
@@ -185,7 +177,6 @@ an inspected event. Do not invent responses to complete a diagram.
   available; otherwise run DOM checks and disclose the lack of visual QA.
 - Ensure the HTML works offline and includes a textual edge list; diagrams
   cannot be the only accessible explanation. Escape repository-derived text.
-- Test full-report and section handoffs, copy feedback and manual-copy fallback.
 - Delegate from responsibility boundaries: name allowed files, dependencies,
   invariants, existing checks and coordination points. Do not imply tasks that
   touch the same shared contract can be implemented independently.
