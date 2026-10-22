@@ -71,8 +71,11 @@ the same scope and an instruction to review correctness and security only.
 
 Wait for both results before making edits. Neither review's approval replaces
 tests or required reviews. Keep the repository's other review methods in place.
-If the diff touches UI files (components, styles, templates) and `ui-review` is
-available, run it as a third review.
+If the diff touches web or React Native UI files (components, styles,
+templates) and `ui-review` is available, run it as an extra review. If it adds
+or changes motion (transitions, keyframes, springs, animation libraries) and
+`review-animations` is available, run that too. Skip both for game engines,
+canvas or shader rendering, and other non-DOM UI, where their rules misfire.
 Resolve blocking findings from every review before shipping. When the two
 reviews conflict, such as a deletion that would remove a guard the correctness
 review asked for, correctness wins.
