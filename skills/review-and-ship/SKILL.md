@@ -22,7 +22,7 @@ says which reviewer ran.
 
 Own the review-to-ship workflow. Delegate the complexity review, apply the fixes
 yourself, and verify before publishing. Invoking this skill authorizes scoped
-commits, pushes, PR creation, and merging. It does not authorize unrelated
+commits, pushes, PR creation, PR comments, and merging. It does not authorize unrelated
 changes or bypassing repository protections.
 
 ## 1. Establish the target
@@ -125,6 +125,12 @@ Re-fetch PR metadata. Verify that its base matches the reviewed base and that th
 remote head SHA equals the reviewed local HEAD. Wait for required checks on that SHA, and inspect mergeability,
 draft status, and required approvals. Stop on failed checks, conflicts, missing
 approvals, or a changed head. Never use an admin override or dismiss reviews.
+
+Before merging, post a PR comment with `gh pr comment <number> --body-file <file>`
+summarizing the final scoped changes, review fixes, validation results, and any
+remaining limitations, so the PR records what is being shipped. Confirm the
+comment was posted successfully; if posting fails, stop before merging and
+report the blocker.
 
 Squash and merge PRs by default. Use another merge method only when the user
 explicitly requests it. If the repository does not allow squash merging, stop
