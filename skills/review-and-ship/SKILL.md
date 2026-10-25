@@ -86,6 +86,14 @@ Apply each finding with the smallest behavior-preserving change. Inspect callers
 and tests before removing code. If a finding would break a requirement, explain
 why and give that evidence to the reviewer rather than following it blindly.
 
+Then sweep the scoped diff for slop comments and delete them: comments that
+restate the next line, narrate the change ("now uses X", "added for Y", "fixed
+bug"), address the reviewer, or leave TODOs nobody owns. A comment stays if it
+says why, warns about a non-obvious constraint, or matches the file's existing
+comment style. Touch only comments the scoped diff added or changed; leave the
+rest of the file to its owners. If `unslop` is available, apply its patterns to
+the comments that stay and to the commit message and PR body in steps 4 and 5.
+
 Run the repository's relevant tests, lint, and type checks, plus `git diff --check`.
 Use at least one smoke test or runnable self-check when no test suite exists.
 Do not delete tests to satisfy the complexity review. Report unavailable checks;
