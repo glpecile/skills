@@ -143,11 +143,15 @@ report the blocker.
 Squash and merge PRs by default. Use another merge method only when the user
 explicitly requests it. If the repository does not allow squash merging, stop
 and report the blocker rather than choosing another method. Merge the explicit
-PR number with `gh pr merge <number> --squash --match-head-commit <reviewed-sha>`
+PR number with `gh pr merge <number> --squash --delete-branch --match-head-commit <reviewed-sha>`
 so a concurrent push cannot silently change what gets merged. Replace `--squash`
-only for an explicitly requested method. Respect merge queues. Auto-merge or queue entry
+only for an explicitly requested method. A squash merge leaves the head branch
+with commits that never reach the base, so `--delete-branch` removes it locally
+and on the remote. Omit it when the head branch lives in a fork, is checked out
+in another worktree, or the user asked to keep it, and keep the branch for other
+merge methods unless asked. Respect merge queues. Auto-merge or queue entry
 is pending, not a completed merge. Confirm the PR's actual merged state before
-reporting success. Do not delete branches unless asked.
+reporting success.
 
 After the merge succeeds, return to `main` and run `git pull --ff-only`. If the
 repository has no `main`, use its default branch. Preserve unrelated local work;
@@ -159,4 +163,4 @@ but local cleanup is blocked.
 
 Report which reviewers ran, the fixes, validation results, commit and push status, and PR merge status
 or blocker. Include the PR link when available and say whether the checkout is
-back on updated `main`. Do not describe a queued merge as merged.
+back on updated `main` and whether the branch was deleted. Do not describe a queued merge as merged.
