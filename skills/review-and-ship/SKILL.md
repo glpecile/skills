@@ -86,8 +86,23 @@ Apply each finding with the smallest behavior-preserving change. Inspect callers
 and tests before removing code. If a finding would break a requirement, explain
 why and give that evidence to the reviewer rather than following it blindly.
 
+Keep the diff at the size the user's goal needs. Review loops grow a PR one
+cheap-looking fix at a time. Fix real bugs in the intended case. Decline the
+rest with a written reason and list them as follow-ups: unneeded tests, guards
+for edge cases that do not matter, extra compatibility, and small performance
+costs. A declined finding is not actionable. Prefer the fix that deletes or
+narrows code.
+
 Run the repository's relevant tests, lint, and type checks, plus `git diff --check`.
-Use at least one smoke test or runnable self-check when no test suite exists.
+
+Get proof for every change in the final diff. Proof is evidence you observed in
+this session: command output, a reproduction, or a screenshot. For a bug fix,
+reproduce the failure, apply the fix, and watch the same reproduction pass. For
+UI or runtime behavior, run the app and look at the change, because green
+mocked tests do not prove what the user sees. When the behavior has no test and
+the repository has a test setup, add one focused test that fails without the
+change. Without a test suite, use at least one smoke test or runnable
+self-check. If you cannot prove a change, stop shipping and say what is unproved.
 Do not delete tests to satisfy the complexity review. Report unavailable checks;
 do not claim they passed. Stop shipping if validation fails or cannot establish
 that the changes work.
@@ -117,9 +132,12 @@ issues or a disagreement remains unresolved, stop with the remaining findings.
 After pushing, look again for an open PR matching the verified head branch and
 repository, so a PR opened during the review is reused rather than duplicated.
 If none exists, create one with `gh pr create`, explicitly setting the base and
-head. Use a descriptive title and summarize the scoped changes and validation
-in the body. Record the new PR's number and URL. If creation fails, stop and
-report the blocker; do not merge locally or fall back to a direct push.
+head. Follow the title conventions in recently merged PRs and Git history.
+Open the body with the problem, in the terms of the user's request, then the
+fix in one or two sentences. Do not lead with a list of edited files or
+functions. Add one line that says how you proved the change. Record the new
+PR's number and URL. If creation fails, stop and report the blocker; do not
+merge locally or fall back to a direct push.
 
 Re-fetch PR metadata. Verify that its base matches the reviewed base and that the
 remote head SHA equals the reviewed local HEAD. Wait for required checks on that SHA, and inspect mergeability,
@@ -143,6 +161,7 @@ but local cleanup is blocked.
 
 ## Final response
 
-Report which reviewers ran, the fixes, validation results, commit and push status, and PR merge status
+Report which reviewers ran, the fixes, the proof for each change, declined
+findings as follow-ups, validation results, commit and push status, and PR merge status
 or blocker. Include the PR link when available and say whether the checkout is
 back on updated `main`. Do not describe a queued merge as merged.
