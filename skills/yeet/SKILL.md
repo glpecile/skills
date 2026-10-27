@@ -1,7 +1,6 @@
 ---
 name: yeet
-description: Review, fix, validate and merge the current changes. Use when the user says "yeet" or "/yeet".
-disable-model-invocation: true
+description: Review, fix, validate and merge the current changes. Use when the user says "yeet", "/yeet", or "review and ship".
 compatibility: Requires the ponytail-review skill, a subagent tool, git, and GitHub CLI gh for PR operations. Uses the harness's built-in review skill (code-review in Claude Code) when one exists.
 ---
 
