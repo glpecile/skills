@@ -1,11 +1,11 @@
 ---
-name: review-and-ship
-description: Review, simplify, validate, and publish scoped code changes. Run the harness's built-in code review and a delegated read-only complexity review, fix findings, then commit and push. Create a PR if none exists, merge it, then return to main and pull. Use when the user says "review-and-ship", "/review-and-ship", "review and ship", or asks to review, simplify, and publish changes. Do not trigger for review-only requests or a push or merge request that does not ask for the review workflow.
+name: yeet
+description: Review, fix, validate and merge the current changes. Use when the user says "yeet" or "/yeet".
 disable-model-invocation: true
 compatibility: Requires the ponytail-review skill, a subagent tool, git, and GitHub CLI gh for PR operations. Uses the harness's built-in review skill (code-review in Claude Code) when one exists.
 ---
 
-# Review and ship
+# Yeet
 
 ## Required dependency
 
