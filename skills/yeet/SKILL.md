@@ -138,6 +138,13 @@ functions. Add one line that says how you proved the change. Record the new
 PR's number and URL. If creation fails, stop and report the blocker; do not
 merge locally or fall back to a direct push.
 
+Never post the body, a summary, or the proof as a PR comment. That repeats the
+description under the user's name. Comment only to record review findings,
+whether fixed or declined, and only once per PR. Open the comment with who wrote
+it, such as "Review findings from <model name>, posted on behalf of <name>",
+using your model name and the name from `git config user.name`. GitHub shows
+the comment under the user's account, so readers need to know it came from an agent.
+
 Re-fetch PR metadata. Verify that its base matches the reviewed base and that the
 remote head SHA equals the reviewed local HEAD. Wait for required checks on that SHA, and inspect mergeability,
 draft status, and required approvals. Stop on failed checks, conflicts, missing
