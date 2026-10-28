@@ -1,7 +1,7 @@
 ---
 name: yeet
 description: Review, fix, validate and merge the current changes. Use when the user says "yeet", "/yeet", or "review and ship".
-compatibility: Requires the ponytail-review skill, a subagent tool, git, and GitHub CLI gh for PR operations. Uses the harness's built-in review skill (code-review in Claude Code) when one exists.
+compatibility: Requires the ponytail-review skill, a subagent tool, git, and GitHub CLI gh for PR operations. UI diffs also require the find-animation-opportunities, animate, and review-animations skills. Uses the harness's built-in review skill (code-review in Claude Code) when one exists.
 ---
 
 # Yeet
@@ -13,6 +13,11 @@ The workflow name does not depend on the reviewer. Before starting the workflow,
 load that skill and confirm a subagent tool is available. If either prerequisite
 is missing, stop and report it. Do not edit, commit, push, or merge anything,
 and do not substitute an inline review.
+
+The motion reviewers are `find-animation-opportunities`, `animate`, and
+`review-animations`, installed separately from `emilkowalski/skill`. They are
+required only when the diff touches web or React Native UI. Once step 1 shows
+it does, load all three. If any is missing, stop and report it the same way.
 
 The correctness reviewer is the harness's built-in review skill: `code-review`
 in Claude Code. Check the available skills for it before starting. Without one,
@@ -71,10 +76,20 @@ the same scope and an instruction to review correctness and security only.
 Wait for both results before making edits. Neither review's approval replaces
 tests or required reviews. Keep the repository's other review methods in place.
 If the diff touches web or React Native UI files (components, styles,
-templates) and `ui-review` is available, run it as an extra review. If it adds
-or changes motion (transitions, keyframes, springs, animation libraries) and
-`review-animations` is available, run that too. Skip both for game engines,
-canvas or shader rendering, and other non-DOM UI, where their rules misfire.
+templates) and `ui-review` is available, run it as an extra review. Skip it and
+the motion chain below for game engines, canvas or shader rendering, and other
+non-DOM UI, where their rules misfire.
+
+**Motion.** On the same UI diffs, run `find-animation-opportunities`, then
+`animate`, then `review-animations`. Delegate the two reviews to read-only
+subagents set up like the complexity reviewer: same scope, the actual loaded
+skill instructions or a path to read them, and that skill's finding format.
+Scope `find-animation-opportunities` to elements the diff adds or changes, and
+treat its proposals as findings. In step 3, build accepted proposals yourself
+with the loaded `animate` instructions. Then run `review-animations` on the
+diff's motion (transitions, keyframes, springs, animation libraries), including
+motion just added, before shipping.
+
 Resolve blocking findings from every review before shipping. When the two
 reviews conflict, such as a deletion that would remove a guard the correctness
 review asked for, correctness wins.
@@ -139,11 +154,18 @@ PR's number and URL. If creation fails, stop and report the blocker; do not
 merge locally or fall back to a direct push.
 
 Never post the body, a summary, or the proof as a PR comment. That repeats the
-description under the user's name. Comment only to record review findings,
-whether fixed or declined, and only once per PR. Open the comment with who wrote
-it, such as "Review findings from <model name>, posted on behalf of <name>",
+description under the user's name. Submit one PR review per PR, and only to
+record review findings, whether fixed or declined. Open it with who wrote it,
+such as "Review findings from <model name>, posted on behalf of <name>",
 using your model name and the name from `git config user.name`. GitHub shows
-the comment under the user's account, so readers need to know it came from an agent.
+the review under the user's account, so readers need to know it came from an agent.
+
+When no actionable findings remain and validation passed, approve with
+`gh pr review <number> --approve`, putting the findings in `--body` if there
+are any. GitHub rejects approving your own PR, so when `gh pr view --json author`
+matches `gh api user`, use `--comment` for findings instead and skip the
+approval. Your approval does not replace approvals the repository requires
+from others.
 
 Re-fetch PR metadata. Verify that its base matches the reviewed base and that the
 remote head SHA equals the reviewed local HEAD. Wait for required checks on that SHA, and inspect mergeability,
@@ -168,6 +190,6 @@ but local cleanup is blocked.
 ## Final response
 
 Report which reviewers ran, the fixes, the proof for each change, declined
-findings as follow-ups, validation results, commit and push status, and PR merge status
+findings as follow-ups, validation results, commit and push status, whether you approved, and PR merge status
 or blocker. Include the PR link when available and say whether the checkout is
 back on updated `main`. Do not describe a queued merge as merged.
