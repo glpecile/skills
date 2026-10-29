@@ -60,6 +60,17 @@ in parallel.
 - **Background work:** agents, jobs, or deploys the chat started. Check
   whether each one finished and what it returned.
 
+With four or more items, or two or more systems, delegate the checks when the
+harness has a subagent tool. Spawn one read-only subagent per system (GitHub,
+Jira, artifacts and Notion, and so on) on the cheapest model, all in one
+message. Give each one the item list with URLs and what the chat last said
+about each item, and have it reply with one line per item: title, live state,
+and what changed since the chat. It must not edit, comment, label, or spawn
+more agents. This keeps raw tool output out of an already long chat. A fresh
+agent also does not take the chat's claims on trust. The fixes in step 4 stay
+with you. If the chat was compacted, one more subagent can grep the transcript
+on disk for the links and unanswered questions from step 1.
+
 If you cannot reach a tool (no auth, no MCP), mark the item "not verified"
 and say why. Never report chat memory as current state.
 When live state differs from what the chat last said, mark the item
@@ -115,44 +126,57 @@ Blocked or Up next with its output, not under Fixed.
 
 ## 5. Report
 
-Lead with the single most important next action. Then the sections below, in
-this order. Omit a section with nothing in it. Keep each bullet to one line.
-Mark an unverified item with "(not verified: <reason>)". Show every link by
-its title, never a bare id: "#123" means nothing a week later.
+State comes first and actions come last. In a terminal, the user reads the end
+of the message first, so put what they must do there. The whole report fits on
+one screen, about 15 lines. Omit a section with nothing in it. A table cell
+holds a few words. A bullet stays on one line in an 80-column terminal, and if
+it wraps, cut it. Each fact appears once. Someone else's pending review goes
+under Waiting on, not in the table notes and not in Next.
 
 ```
-**Next:** <one action, and who does it>
+**<goal in one line>** · idle since <date> · <N> commits on base since
 
-**Goal:** <one line> · last active <date>, <N> commits on base since
-
-**Links**
-- [PR #123: <title>](<url>) — open, checks green, 1 approval
-- [JIRA-45: <title>](<url>) — changed: In Progress → In Review
-- [Notion: <title>](<url>)
-- [Artifact: <title>](<url>)
-
-**Done**
-- <outcome, not the steps taken>
+| Item | State | Since the chat |
+|---|---|---|
+| [#123 <short title>](<url>) | open, green, 1 approval | — |
+| [JIRA-45 <short title>](<url>) | In Review | changed: was In Progress |
+| [<artifact title>](<url>) | 27/27 checks pass | changed |
 
 **Fixed just now**
 - <what broke> → <fix> (<check that passed>)
 
-**Needs you**
-- <decision or approval>, my pick: <option> because <reason>
-
-**Blocked**
-- <who> — <what they owe> — since <date>, blocks <item>
+**Waiting on**
+- <who>: <what they owe>, since <date>. Blocks <item>.
 
 **Up next**
-1. <step>
+1. <step, and what it waits for>
+
+**Needs you**
+1. <decision or approval>? My pick: <option>, because <reason>.
+
+**Next:** <the one action for the user>
 ```
 
-Write outcomes, not history: "Login retries on 401" beats "Edited auth.ts and
-added a retry loop". The user can read the chat for the history.
+The table holds every link the work depends on, merged and closed ones too, so
+there is no separate Done section. Show each link by a short title, never a
+bare id, because "#123" means nothing a week later. Put "not verified:
+<reason>" in the State cell when you could not check it. Write outcomes, not
+history: "Login retries on 401" beats "Edited auth.ts and added a retry loop".
+The user can read the chat for the history.
+
+**Next** is something the user can do now. When nothing is theirs to do, write
+"**Next:** nothing for you. Waiting on <who> for <what>." Do not dress up
+someone else's task as the user's next step.
 
 If Needs you has items and the harness has a question tool (Claude Code:
 `AskUserQuestion`), ask them through it after the report, your pick first,
 at most 4. A question buried in a long message gets missed.
+
+A question that times out, or that the user skips, is a no. Do not act on it,
+even when the tool result says to use your best judgment. Every Needs you item
+waits for an explicit yes, because the user may be away for hours. Stop there
+and send nothing else. When an answer arrives, do that one thing and confirm
+it in one line. Do not repeat the report.
 
 Stop after the report and the questions. Do not start the Up next items
 unless the user says so.
