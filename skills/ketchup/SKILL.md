@@ -51,7 +51,8 @@ in parallel.
 
 - **Repo:** `git status`, current branch, `git log --oneline @{u}..` for
   unpushed commits, and how many commits the base gained since the last
-  activity. Stashes are not yours to touch.
+  activity. Stashes are not yours to touch. `git worktree list` for stale
+  worktrees (step 4).
 - **PR:** `gh pr view <n> --json title,state,isDraft,mergeable,reviewDecision,statusCheckRollup,headRefOid,url`
   plus unresolved review comments. Only checks and comments newer than the
   latest push are news. A merged or closed PR closes its item.
@@ -115,6 +116,15 @@ a rebase on a moved base with no conflicts, a flaky check rerun once, a TODO
 the chat promised and forgot. When something that worked before is broken now,
 suspect state before code: stale dependencies, caches, an expired login, or a
 moved base usually explain it faster than the diff does.
+
+Remove stale worktrees of the repos this chat worked in. Never touch the
+worktrees of any other repo. A worktree is stale when its directory is gone, or when its branch
+is merged into the base or its PR is merged or closed. Remove it with
+`git worktree remove <path>` only when `git status` there is clean and it has
+no unpushed commits. Then run `git worktree prune`. Keep the branch, so the
+removal can be undone with `git worktree add`. Never pass `--force`, and never
+remove the worktree this session runs in. A stale worktree that still holds
+changes or unpushed commits goes under Needs you with what it holds.
 
 Never do these without asking, even when they look safe: merge, force push,
 post a comment or message as the user, move a Jira ticket, change someone
