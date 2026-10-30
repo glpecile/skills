@@ -178,6 +178,43 @@ The user can read the chat for the history.
 "**Next:** nothing for you. Waiting on <who> for <what>." Do not dress up
 someone else's task as the user's next step.
 
+Never write the report as a paragraph. A paragraph hides the actions in the
+middle of a sentence, and the user has to read all of it to find them.
+
+BAD
+
+> ❌ The Legal-record ARP work has been idle since October 29: both PRs are
+> mergeable and waiting on reviewer approval, and the QA walkthrough and two
+> board links lost their watches. You need to name another dev community for
+> CPF testing (instance 17 has only 5 of 21 establishments complete) and say
+> whether to stop the old :3200 server.
+
+GOOD
+
+```
+**Legal-record ARP QA on dev** · idle since 29/10
+
+| Item | State | Since the chat |
+|---|---|---|
+| [#4821 ARP front](<url>) | mergeable, review requested | — |
+| [#977 ARP back](<url>) | mergeable, review requested | — |
+| [Registro legal QA](<url>) | watch lost | changed |
+
+**Needs you**
+1. Instance 17 has 5 of 21 establishments complete. Fill it for the CPF test? My pick: yes.
+2. Stop the old dev server on :3200? My pick: yes, worktree 3605 is merged.
+
+**Next:** answer the 2 questions above.
+```
+
+BAD
+
+> ❌ **Next:** Martin Marussi has to review #13033.
+
+GOOD
+
+> ✅ **Next:** nothing for you. Waiting on Martin for the review of #13033.
+
 If Needs you has items and the harness has a question tool (Claude Code:
 `AskUserQuestion`), ask them through it after the report, your pick first,
 at most 4. A question buried in a long message gets missed.
@@ -185,8 +222,34 @@ at most 4. A question buried in a long message gets missed.
 A question that times out, or that the user skips, is a no. Do not act on it,
 even when the tool result says to use your best judgment. Every Needs you item
 waits for an explicit yes, because the user may be away for hours. Stop there
-and send nothing else. When an answer arrives, do that one thing and confirm
-it in one line. Do not repeat the report.
+and send nothing else.
+
+When an answer arrives, do that one thing. The reply after it is short and ends
+like the report: Needs you if a new question came up, then **Next**. Give the
+outcome in one line and each new finding in one line. Leave out the values you
+wrote and the steps you took, unless the user asks for them. Every ketchup
+reply ends with a **Next:** line.
+
+BAD
+
+> ❌ Both are done. The old :3200 server is stopped. Instance 17 now has fiscal
+> data on all 21 establishments. … *(25 more lines: each field written, the
+> CPF used, what the step shows, the cause, a screenshot path, what is still
+> open)* … I can save the 5 older regions again with the same data. Do you want
+> me to do it?
+
+GOOD
+
+```
+Done: :3200 is stopped. Instance 17 has fiscal data on all 21 establishments.
+Found: the "We check the CPFs" notice still shows. The 5 regions that were
+complete before the fill have no Chronos status. [Screenshot](<path>)
+
+**Needs you**
+1. Save those 5 regions again with the same data, to test the fix? My pick: yes, no values change.
+
+**Next:** answer the question, then test "Cargar más" on http://localhost:3000.
+```
 
 Stop after the report and the questions. Do not start the Up next items
 unless the user says so.
