@@ -169,7 +169,10 @@ under Waiting on, not in the table notes and not in Next.
 
 The table holds every link the work depends on, merged and closed ones too, so
 there is no separate Done section. Show each link by a short title, never a
-bare id, because "#123" means nothing a week later. Put "not verified:
+bare id, because "#123" means nothing a week later. This applies everywhere,
+in every ketchup reply: each PR, ticket, artifact, or page you name in Fixed,
+Waiting on, Needs you, Next, or a follow-up reply is a link,
+`[#123 <short title>](<url>)`. The user must reach it in one click. Put "not verified:
 <reason>" in the State cell when you could not check it. Write outcomes, not
 history: "Login retries on 401" beats "Edited auth.ts and added a retry loop".
 The user can read the chat for the history.
@@ -213,7 +216,8 @@ BAD
 
 GOOD
 
-> ✅ **Next:** nothing for you. Waiting on Martin for the review of #13033.
+> ✅ **Next:** nothing for you. Waiting on Martin for the review of
+> [#13033 <short title>](<url>).
 
 If Needs you has items and the harness has a question tool (Claude Code:
 `AskUserQuestion`), ask them through it after the report, your pick first,
@@ -228,7 +232,26 @@ When an answer arrives, do that one thing. The reply after it is short and ends
 like the report: Needs you if a new question came up, then **Next**. Give the
 outcome in one line and each new finding in one line. Leave out the values you
 wrote and the steps you took, unless the user asks for them. Every ketchup
-reply ends with a **Next:** line.
+reply ends with a **Next:** line. Every item it names is a link, as in the
+report.
+
+BAD
+
+> ❌ Web PR #13033 is approved with green checks and no open threads, so I've
+> asked whether to merge it, and I've cleaned up the leftover hu-translations
+> worktree. Once it merges, I'll update the QA page and the feature board.
+
+GOOD
+
+```
+Done: removed the stale hu-translations worktree.
+[#13033 <short title>](<url>) is approved, green, no open threads.
+
+**Needs you**
+1. Merge [#13033](<url>)? My pick: yes. Then I update [QA page](<url>) and [board](<url>).
+
+**Next:** answer the question.
+```
 
 BAD
 
