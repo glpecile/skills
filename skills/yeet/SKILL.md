@@ -1,7 +1,7 @@
 ---
 name: yeet
 description: Review, fix, validate and merge the current changes. Use when the user says "yeet", "/yeet", or "review and ship".
-compatibility: Requires the ponytail-review skill, a subagent tool, git, and GitHub CLI gh for PR operations. UI diffs also require the find-animation-opportunities, animate, and review-animations skills. Uses the harness's built-in review skill (code-review in Claude Code) when one exists.
+compatibility: Requires the ponytail-review skill, a subagent tool, git, and GitHub CLI gh for PR operations. UI diffs also require the find-animation-opportunities, animate, and review-animations skills. React diffs use the react-taste skill when it is installed. Uses the harness's built-in review skill (code-review in Claude Code) when one exists.
 ---
 
 # Yeet
@@ -79,6 +79,13 @@ If the diff touches web or React Native UI files (components, styles,
 templates) and `ui-review` is available, run it as an extra review. Skip it and
 the motion chain below for game engines, canvas or shader rendering, and other
 non-DOM UI, where their rules misfire.
+
+**React.** If the diff touches React or React Native components or hooks and
+`react-taste` is available, run it as an extra review. Delegate it to a
+read-only subagent set up like the complexity reviewer. Scope it to the code
+the diff adds or changes. An existing effect or timeout that the diff only
+touches goes in the follow-ups, not in the fixes. If `react-taste` is missing,
+continue, and say in the final response that it did not run.
 
 **Motion.** On the same UI diffs, run `find-animation-opportunities`, then
 `animate`, then `review-animations`. Delegate the two reviews to read-only
