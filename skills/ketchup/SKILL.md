@@ -143,6 +143,12 @@ holds a few words. A bullet stays on one line in an 80-column terminal, and if
 it wraps, cut it. Each fact appears once. Someone else's pending review goes
 under Waiting on, not in the table notes and not in Next.
 
+Write every ketchup reply in ASD-STE100 Simplified Technical English. Use
+short sentences, one idea per sentence, active voice, and simple words. Use
+one word for one thing. Write "approved", not "got the green light". Do not
+write filler or hype. The user reads the reply fast after time away, and plain
+sentences give no second meaning to decode.
+
 ```
 **<goal in one line>** · idle since <date> · <N> commits on base since
 
