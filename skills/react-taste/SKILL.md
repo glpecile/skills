@@ -1,6 +1,6 @@
 ---
 name: react-taste
-description: Opinionated DOs and DON'Ts for React code, covering effects, state placement, async state with useTransition, Suspense loading states, component APIs, and memoization under React Compiler. Use when writing, editing, or reviewing React or React Native components and hooks, and whenever a change adds useEffect, useState, useMemo, useCallback, setTimeout, or an isLoading branch.
+description: Opinionated DOs and DON'Ts for React code, gated by the installed React version, covering effects, state placement, hidden UI with Activity, async state with useTransition, Suspense loading states, component APIs, and memoization under React Compiler. Use when writing, editing, or reviewing React or React Native components and hooks, and whenever a change adds useEffect, useState, useMemo, useCallback, setTimeout, or an isLoading branch.
 ---
 
 # React taste
@@ -10,6 +10,22 @@ a query result copied into a form, a flag set around an `await`. Each copy
 must be kept in sync by hand, and an effect is usually the hand. Before you
 write a hook, find the one owner of the value. Walk the trees below for every
 `useEffect`, `useState`, `setTimeout`, and loading flag you add or touch.
+
+## 0. Check the React version
+
+Read the installed version first: `node_modules/react/package.json` or the
+lockfile, not the range in `package.json`. A rule marked with a version below
+applies only at that version or later. Below it, use the fallback. An API
+from a newer React fails at runtime or silently does something else: in React
+18, `isPending` from an async transition ends at the first `await`.
+
+| API | Needs | Below that version |
+|---|---|---|
+| `use()` | 19 | The query library's Suspense hook (`useSuspenseQuery`). |
+| Async function in `startTransition`, `useActionState`, `useOptimistic` | 19 | `useMutation`: its `isPending`, `error`, and `onMutate` for optimistic updates. With no mutation hook, a pending flag set in `try`/`finally` is the one allowed exception. Name the version in a comment. |
+| `<Activity>` | 19.2 | Lift the state that must survive to the parent (section 2). |
+| `useEffectEvent` | 19.2 | Keep the value in the effect's dependencies and accept the restart. Never silence the exhaustive-deps lint rule instead. |
+| `useSyncExternalStore`, `useTransition` | 18 | Below 18, tell the user that most of this skill does not apply, and follow the project's patterns. |
 
 ## 1. Effects and timers
 
@@ -28,7 +44,7 @@ Why do you want this effect?
 │   └── Render the component with key={thatProp}.
 ├── To fetch data
 │   └── Use the project's query library (TanStack Query, SWR, a router
-│       loader) or `use()` with Suspense. Never fetch into useState.
+│       loader) or `use()` with Suspense (19+). Never fetch into useState.
 ├── To keep a form field in sync with another field
 │   └── react-hook-form: `rules.deps`, or `getFieldState` inside `validate`.
 │       Never call `trigger` from an effect.
@@ -39,6 +55,10 @@ Why do you want this effect?
 │       transition. Never a timeout that guesses the duration.
 └── To subscribe to an external system and clean up (socket, listener, SDK)
     └── An effect is correct. Tell the user why before you add it.
+        Does it read a value that must not restart the subscription (a muted
+        flag, a theme)? 19.2+: read it inside a useEffectEvent. Below 19.2:
+        keep it in the dependencies. Never use useEffectEvent to drop a real
+        dependency, because the effect then runs with stale input.
 ```
 
 ### A timeout is not a fix
@@ -94,6 +114,33 @@ A form holds only the user's edits over the fetched values. Pass the fetched
 values as `defaultValues` or `values`, and do not write them into the form
 from an effect.
 
+### UI that hides and shows again
+
+Read https://react.dev/reference/react/Activity before you hide a tab, a
+sidebar, a sheet, or a step.
+
+```
+Must the UI keep its state (scroll, draft, open section) while hidden, or
+load before the user opens it?
+├── No, it starts fresh each time
+│   └── {open && <Panel />}
+└── Yes
+    ├── 19.2+ → <Activity mode={open ? 'visible' : 'hidden'}><Panel /></Activity>
+    └── Below 19.2 → Lift the state that must survive to the parent. Hide the
+        panel with CSS only when its effects can keep running while hidden.
+```
+
+- Treat a hidden Activity as unmounted. React keeps its state and DOM but
+  runs its effect cleanups. An effect that does work on mount and has no
+  cleanup is a bug that Activity shows. Keep `<StrictMode>` on, because it
+  unmounts and mounts Activity children in development and shows the missing
+  cleanup.
+- Hidden DOM keeps playing. Pause `<video>`, `<audio>`, and `<iframe>` in a
+  `useLayoutEffect` cleanup.
+- A hidden Activity pre-renders only data read through Suspense (`use()`, a
+  Suspense query). Data fetched in an effect does not load until the panel is
+  visible.
+
 ## 3. Async state
 
 The pending flag, the result, and the error of a promise come from a hook that
@@ -110,13 +157,14 @@ What starts the promise?
 │       "Saving…" row.
 ├── A user action that does async work or a slow state update, and the
 │   project has no mutation hook for it
-│   └── useTransition:
+│   └── useTransition (async function: 19+):
 │         const [isPending, startTransition] = useTransition()
 │         startTransition(async () => { await save(draft) })
 │       A throw inside the transition goes to the nearest error boundary.
-│       If the error must show inline next to the form, use useActionState.
+│       If the error must show inline next to the form, use useActionState
+│       (19+).
 └── The UI must show the result before the server confirms
-    └── useOptimistic, inside the same transition or action.
+    └── useOptimistic (19+), inside the same transition or action.
 ```
 
 ## 4. Loading and error states
