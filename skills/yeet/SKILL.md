@@ -188,15 +188,30 @@ only for an explicitly requested method. Respect merge queues. Auto-merge or que
 is pending, not a completed merge. Confirm the PR's actual merged state before
 reporting success. Do not delete branches unless asked.
 
-After the merge succeeds, return to `main` and run `git pull --ff-only`. If the
+After the merge succeeds, clean up the checkout you worked in. If the
 repository has no `main`, use its default branch. Preserve unrelated local work;
-do not stash, reset, clean, discard changes, or remove worktrees to make the switch
-or pull succeed. If switching or pulling is unsafe, report that the PR merged
-but local cleanup is blocked.
+do not stash, reset, clean, or discard changes to make the cleanup succeed. If a
+step is unsafe, report that the PR merged but local cleanup is blocked.
+
+- **Main checkout** (`git rev-parse --git-dir` equals
+  `git rev-parse --git-common-dir`): return to `main` and run
+  `git pull --ff-only`.
+- **Linked worktree** (the two differ): the worktree's work is now on `main`,
+  so remove it. A leftover worktree holds a merged branch that you cannot
+  check out anywhere else, and the worktrees pile up. Remove it only when
+  `git status` there is clean and `git log @{u}..` is empty. Otherwise keep
+  it and report what it holds. In Claude Code, if the session entered the
+  worktree with `EnterWorktree`, leave it with `ExitWorktree` and remove it.
+  Otherwise, move to the main checkout (the first entry of
+  `git worktree list`) and run `git worktree remove <path>`, then
+  `git worktree prune`. Never pass `--force`. Keep the branch, so
+  `git worktree add` can restore the worktree. Then, if the main checkout is
+  on `main` and clean, run `git pull --ff-only` there.
+- Never remove a worktree that this run did not work in.
 
 ## Final response
 
 Report which reviewers ran, the fixes, the proof for each change, declined
 findings as follow-ups, validation results, commit and push status, whether you approved, and PR merge status
 or blocker. Include the PR link when available and say whether the checkout is
-back on updated `main`. Do not describe a queued merge as merged.
+back on updated `main` and whether you removed the worktree. Do not describe a queued merge as merged.
