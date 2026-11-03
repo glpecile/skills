@@ -1,6 +1,6 @@
 ---
 name: delegate
-description: Plan at session level, delegate implementation to cheaper model subagents, verify in a goal loop. Use when the user asks to delegate work, split plan/implementation across models, or run a goal loop with subagents.
+description: Plan the work, hand it to cheaper model subagents, and verify what comes back. Use when the user asks to delegate work or run a goal loop with subagents.
 ---
 
 # Delegate

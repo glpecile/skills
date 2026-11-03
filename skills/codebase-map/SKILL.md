@@ -1,6 +1,6 @@
 ---
 name: codebase-map
-description: Generate an evidence-backed interactive HTML architecture map and companion Markdown for understanding a codebase and delegating work. Use when the user wants the bigger picture, interactive UML-like diagrams, component sharing analysis, state/data flow, subsystem responsibilities, dependency injection or persistence maps, or architectural boundaries for scoped agent tasks. Not a symbol inventory, implementation task, or automatic refactoring tool.
+description: Map a codebase's architecture as an interactive HTML page and a Markdown report. Use when the user asks for the bigger picture, an architecture map, or how to split work across agents.
 compatibility: Requires sh and jq 1.6+ for the renderer. Without jq, the skill falls back to filling the template by hand.
 ---
 

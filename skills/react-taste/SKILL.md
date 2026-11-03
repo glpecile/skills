@@ -1,6 +1,6 @@
 ---
 name: react-taste
-description: Opinionated DOs and DON'Ts for React code, gated by the installed React version, covering effects, state placement, hidden UI with Activity, async state with useTransition, Suspense loading states, component APIs, and memoization under React Compiler. Use when writing, editing, or reviewing React or React Native components and hooks, and whenever a change adds useEffect, useState, useMemo, useCallback, setTimeout, or an isLoading branch.
+description: My DOs and DON'Ts for React. Use whenever writing, editing, or reviewing React or React Native code.
 ---
 
 # React taste

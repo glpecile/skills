@@ -1,6 +1,6 @@
 ---
 name: figma-self-review
-description: Self-review UI that was already built from a Figma frame. Render the frame through the Figma MCP, screenshot the build with agent-browser, pixel-diff the two, trace each hot region to an exact property mismatch, fix it, and repeat. Use when the user asks to compare a build with its design, check whether it matches Figma, or self-review against Figma, or after build-design or figma-design-to-code finish. Not for building from a design (build-design) or for adding screenshots to a PR (before-and-after).
+description: Check built UI against its Figma frame and fix the differences. Use when the user asks if a build matches Figma, or after building UI from a Figma design. Not for building from a design (build-design) or for adding screenshots to a PR (before-and-after).
 compatibility: Requires the Figma MCP server, a running local build, and agent-browser 0.38+ (diff screenshot) or another headless browser with ImageMagick 7 for diffing.
 ---
 

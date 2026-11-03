@@ -1,6 +1,6 @@
 ---
 name: find-haptic-opportunities
-description: Audit a mobile interface for missing tactile feedback and propose precise haptic recipes with code evidence. Use for a haptics opportunities pass, asking which interactions should vibrate or tick, or deciding where haptic feedback belongs. Read-only; it produces recommendations, not implementation, unless the user also requests implementation.
+description: Find where a mobile app is missing haptic feedback. Use when the user asks for a haptics pass or which interactions should vibrate or tick.
 ---
 
 # Find haptic opportunities
