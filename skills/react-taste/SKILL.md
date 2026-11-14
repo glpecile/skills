@@ -226,6 +226,22 @@ another prop, and the component grows a branch for each one.
   its root (`Tabs.Trigger must be inside Tabs`). A missing context that
   returns `undefined` renders the wrong UI with no error.
 
+### Destructive actions
+
+An action that deletes, discards, revokes, or cannot be undone always opens a
+confirmation dialog or modal first. Never run it straight from the press. A
+misplaced tap or a stray Enter must not destroy data.
+
+- Use the project's dialog component (an alert dialog, a modal, `Alert.alert`
+  in React Native), not `window.confirm`.
+- Name the action and the object in the title: "Delete 3 files?", not "Are
+  you sure?".
+- Label the confirm button with the verb ("Delete"), never "OK" or "Yes".
+  Style it as destructive.
+- Focus starts on Cancel, so Enter does not confirm by accident.
+- Run the mutation from the confirm button's handler. Keep the dialog open
+  with the button pending until it settles, and show the error inside it.
+
 ## 6. Memoization
 
 ```
