@@ -29,6 +29,56 @@ yourself, and verify before publishing. Invoking this skill authorizes scoped
 commits, pushes, PR creation, and merging. It does not authorize unrelated
 changes or bypassing repository protections.
 
+## Score
+
+Run the fix loop as a hill climb. Measure first, fix second. Make one change,
+measure again, and keep it only when the score improves and nothing else gets
+worse. Otherwise revert it in full. A change that "might help" is not kept, and
+reading the code is not a measurement.
+
+**Default score:** the number of actionable review findings plus the number of
+failing checks (tests, lint, type checks, `git diff --check`). Lower is better.
+It works as a ratchet: no kept change may raise it, and shipping needs 0.
+
+**Named score:** when the user names something to score, such as "score the
+bundle size" or "hillclimb the test runtime", that metric is the score and the
+default score becomes the gate. Before step 2, write down:
+
+- The command that prints the metric as a number, and whether higher or lower
+  is better. If no command prints it, ask for one. Do not estimate it.
+- The stop rule: a target plus a minimum number of attempts, so a lucky early
+  win cannot end the run, for example "20% under baseline and at least 5
+  attempts". Use the user's numbers when given, otherwise propose them.
+
+Then freeze the command. Changing how you measure halfway resets the baseline.
+Keep candidate changes inside the shipping scope unless the user widens it.
+
+For both:
+
+- Record the baseline before any edit: the default score after step 2, a named
+  score after step 1 together with a green run of the gate checks.
+- One change per step: one finding fix, or one hypothesis for a named score.
+  Two changes measured together hide which one helped, so a bad one rides along.
+  A named-score hypothesis names its mechanism ("lazy-load the chart library
+  because it is in the entry chunk"), not "try memoizing something".
+- Before a step, copy each file it touches to the scratchpad. To revert, copy
+  the files back. Do not revert with `git stash` or `git checkout`, which can
+  drop unrelated work.
+- For a noisy metric (timing, memory, a nondeterministic build), run each side
+  at least five times, alternating before and after, and use the median. Keep a
+  change only when it beats the current best by more than the run-to-run spread.
+- Before you trust a gain, rule out that the number measured something else:
+  errors, cached or skipped work, or code that never ran.
+- Do not move the score by weakening what it measures. Skipping or deleting
+  tests, loosening lint rules, and declining findings without a written reason
+  do not count as improvements. Correctness and simplicity outrank the number:
+  revert a gain that breaks behavior, and keep a simplification that holds it.
+- For a named score, log every attempt in a scratchpad `climb.tsv`: hypothesis,
+  change, before, after, delta, verdict. Read it before each attempt so you do
+  not retry a failed idea. On a stall of three rejects in a row, try a different
+  category of change before you call the hill climbed. Stop at the stop rule,
+  or when only marginal ideas remain. Never relax the stop rule to meet it.
+
 ## 1. Establish the target
 
 - Read repository instructions. Inspect the branch, status, staged and unstaged
@@ -103,8 +153,10 @@ review asked for, correctness wins.
 
 ## 3. Fix and verify
 
-Apply each finding with the smallest behavior-preserving change. Inspect callers
-and tests before removing code. If a finding would break a requirement, explain
+Apply each finding with the smallest behavior-preserving change, one climb step
+at a time (see Score). After each step, run the checks it can affect. If a check
+that passed now fails, revert the step. Inspect callers and tests before
+removing code. If a finding would break a requirement, explain
 why and give that evidence to the reviewer rather than following it blindly.
 
 Keep the diff at the size the user's goal needs. Review loops grow a PR one
@@ -129,9 +181,15 @@ do not claim they passed. Stop shipping if validation fails or cannot establish
 that the changes work.
 
 After edits, rerun each review that had actionable findings on the updated full
-scoped diff, and include the disposition of earlier findings. Allow at most three review rounds total.
-Ship only when no actionable findings remain. If the reviewer keeps finding
-issues or a disagreement remains unresolved, stop with the remaining findings.
+scoped diff, and include the disposition of earlier findings. Each round
+recounts the default score. If a round's score is not lower than the previous
+round's, the fixes are making new findings as fast as they close old ones: stop
+with the remaining findings. Allow at most three review rounds total. Ship only
+when no actionable findings remain. If a disagreement remains unresolved, stop
+with the remaining findings.
+
+For a named score, climb it after the default score reaches 0, then run one
+more review round on the final diff, because each kept change is new code.
 
 ## 4. Commit and push
 
@@ -156,7 +214,8 @@ If none exists, create one with `gh pr create`, explicitly setting the base and
 head. Follow the title conventions in recently merged PRs and Git history.
 Open the body with the problem, in the terms of the user's request, then the
 fix in one or two sentences. Do not lead with a list of edited files or
-functions. Add one line that says how you proved the change. Record the new
+functions. Add one line that says how you proved the change. For a named score,
+add one line with the metric from baseline to final. Record the new
 PR's number and URL. If creation fails, stop and report the blocker; do not
 merge locally or fall back to a direct push.
 
@@ -211,7 +270,9 @@ step is unsafe, report that the PR merged but local cleanup is blocked.
 
 ## Final response
 
-Report which reviewers ran, the fixes, the proof for each change, declined
+Report the score from baseline to final, which reviewers ran, the fixes, the proof for each change, declined
 findings as follow-ups, validation results, commit and push status, whether you approved, and PR merge status
-or blocker. Include the PR link when available and say whether the checkout is
+or blocker. For a named score, also give the target, the percent change, the
+attempts kept and reverted, the `climb.tsv` path, and the next idea you would
+try. Include the PR link when available and say whether the checkout is
 back on updated `main` and whether you removed the worktree. Do not describe a queued merge as merged.
