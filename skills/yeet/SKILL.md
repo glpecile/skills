@@ -1,7 +1,7 @@
 ---
 name: yeet
 description: Review, fix, validate and merge the current changes. Use when the user says "yeet", "/yeet", or "review and ship".
-compatibility: Requires the ponytail-review skill, a subagent tool, git, and GitHub CLI gh for PR operations. UI diffs also require the find-animation-opportunities, animate, and review-animations skills. React diffs use the react-taste skill when it is installed. Uses the harness's built-in review skill (code-review in Claude Code) when one exists.
+compatibility: Requires the ponytail-review skill, a subagent tool, git, and GitHub CLI gh for PR operations. UI diffs also require the find-animation-opportunities, animate, and review-animations skills. React diffs use the react-taste skill, and UI diffs the break-ui skill, when installed. Uses the harness's built-in review skill (code-review in Claude Code) when one exists.
 ---
 
 # Yeet
@@ -147,6 +147,17 @@ with the loaded `animate` instructions. Then run `review-animations` on the
 diff's motion (transitions, keyframes, springs, animation libraries), including
 motion just added, before shipping.
 
+**Break.** On the same UI diffs, if `break-ui` (from `emilkowalski/skill`, not
+the `break` skill) is installed, run it on each component the diff adds or
+changes that renders data: props, API responses, or user input. Skip components
+that show only fixed copy. Run it yourself, not in a subagent, because it builds
+a worst-case fixture and needs the running app. Stop at its report. Do not use
+its `+ fix` mode, because step 3 applies fixes after triage. Its Broken and Ugly
+rows are findings and count toward the default score. Its Fragile rows and its
+"Decisions for you" go in the follow-ups, with its recommendation. If
+`break-ui` is missing, continue, and say in the final response that it did not
+run.
+
 Resolve blocking findings from every review before shipping. When the two
 reviews conflict, such as a deletion that would remove a guard the correctness
 review asked for, correctness wins.
@@ -172,7 +183,11 @@ Get proof for every change in the final diff. Proof is evidence you observed in
 this session: command output, a reproduction, or a screenshot. For a bug fix,
 reproduce the failure, apply the fix, and watch the same reproduction pass. For
 UI or runtime behavior, run the app and look at the change, because green
-mocked tests do not prove what the user sees. When the behavior has no test and
+mocked tests do not prove what the user sees. After a `break-ui` fix, flip its
+toggle through every state, Demo included, and confirm the break is gone and
+the demo data did not regress. Before staging, remove the toggle. Keep the
+worst-case fixture as a regression test only when the repository's stories or
+visual tests can load it. Otherwise delete it. When the behavior has no test and
 the repository has a test setup, add one focused test that fails without the
 change. Without a test suite, use at least one smoke test or runnable
 self-check. If you cannot prove a change, stop shipping and say what is unproved.
