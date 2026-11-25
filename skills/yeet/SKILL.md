@@ -105,8 +105,9 @@ For both:
 
 **Comments.** Before the reviews, if `shush` is installed, run it yourself on
 the same scope. It edits only comments, so the reviews see the code without
-them. Its RESHAPE claims go in the commit message, not in the code. If it is
-missing, continue, and say in the final response that it did not run.
+them. Its RESHAPE lines go in the commit message and the PR body, not in the
+code, and count as follow-ups. If it is missing, continue, and say in the
+final response that it did not run.
 
 Run the two reviews in parallel. They look for different things, so neither
 one replaces the other.
