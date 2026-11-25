@@ -1,0 +1,3 @@
+interface:
+  display_name: "Shush"
+  short_description: "Delete comments that narrate or justify the code"
