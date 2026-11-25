@@ -1,7 +1,7 @@
 ---
 name: yeet
 description: Review, fix, validate and merge the current changes. Use when the user says "yeet", "/yeet", or "review and ship".
-compatibility: Requires the ponytail-review skill, a subagent tool, git, and GitHub CLI gh for PR operations. UI diffs also require the find-animation-opportunities, animate, and review-animations skills. React diffs use the react-taste skill, and UI diffs the break-ui skill, when installed. Uses the harness's built-in review skill (code-review in Claude Code) when one exists.
+compatibility: Requires the ponytail-review skill, a subagent tool, git, and GitHub CLI gh for PR operations. UI diffs also require the find-animation-opportunities, animate, and review-animations skills. React diffs use the react-taste skill, and UI diffs the break-ui skill, when installed. Runs the shush skill on comments when installed. Uses the harness's built-in review skill (code-review in Claude Code) when one exists.
 ---
 
 # Yeet
@@ -102,6 +102,11 @@ For both:
 - If there is no change to review or publish and no open PR, report that and stop.
 
 ## 2. Run both reviews
+
+**Comments.** Before the reviews, if `shush` is installed, run it yourself on
+the same scope. It edits only comments, so the reviews see the code without
+them. Its RESHAPE claims go in the commit message, not in the code. If it is
+missing, continue, and say in the final response that it did not run.
 
 Run the two reviews in parallel. They look for different things, so neither
 one replaces the other.
