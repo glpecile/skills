@@ -1,0 +1,3 @@
+interface:
+  display_name: "Scrub"
+  short_description: "Step through a screen recording to find what looks wrong"
