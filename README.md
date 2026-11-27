@@ -6,6 +6,7 @@ They come from my day-to-day work with Claude Code, Cursor, Codex and OpenCode. 
 
 ## Skills
 
+- [**bento-taste**](./skills/bento-taste/SKILL.md): My **aesthetic** for web interfaces. Soft color **bento tiles** that match their peers' height, colors only through **CSS variables** with light and dark themes, **no decorative lines**, and a small **playful microinteraction** on every interactive element, with no zoom, shake or tilt. Ends with a review checklist.
 - [**codebase-map**](./skills/codebase-map/SKILL.md): Creates an offline, interactive **architecture map** with **sequence diagrams**, **component-sharing** findings and copyable **task handoffs**, plus a Markdown report for agents. Source tracing can take several minutes. Needs `jq` 1.6+, or falls back to filling the template by hand.
 - [**delegate**](./skills/delegate/SKILL.md): Plans at session level, hands implementation to **cheaper model subagents**, and verifies each task with a **runnable acceptance check** in a goal loop.
 - [**figma-self-review**](./skills/figma-self-review/SKILL.md): Checks UI you already built against its **Figma frame**. It compares **structure**, **pixel-diffs** both renders, traces each difference to an **exact property**, fixes it, and repeats for up to 3 rounds. Needs the Figma MCP and agent-browser 0.38+, or another headless browser plus ImageMagick 7.
